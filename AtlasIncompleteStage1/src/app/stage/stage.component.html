@@ -1,1 +1,6 @@
-<div class="bg-success">Test</div>
+Test
+<button (click)="addSteve()">Add Steve</button>
+<div *ngFor="let character of stage">
+    <p>{{character.key}}{{character.content.position}}</p>
+    <img [@position]="character.content.position" [src]="characterList[0][character.content.expression]">
+</div>
