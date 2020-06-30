@@ -1,8 +1,9 @@
+{{controller}}
 <div class="col-12" style="overflow-x: hidden; 
   background-image: url('https://cdn.discordapp.com/attachments/467185767593148418/726984522897424464/Deciduous_Forest_Background_-_Road_No_Clearing.png');
   background-repeat: no-repeat;
-  background-size: cover; 
-  height: 100vh;">
-  <app-stage></app-stage>
+  background-size: cover;
+  height:50vh;">
+  <app-stage [charNum]="controller"></app-stage>
 </div>
-<app-control-panel1></app-control-panel1>
+<app-control-panel1 (charNum)="controller = $event"></app-control-panel1>

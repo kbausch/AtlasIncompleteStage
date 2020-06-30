@@ -1,8 +1,6 @@
-Test
-<button (click)="addSteve()">Add Steve</button>
-<div class="mt-5" *ngFor="let character of stage">
-    <p>{{character.position}}</p>
-    <div [@position]="character.position" (@position.start)="logAnimation($event)">
-        <img style="width: 200px;" [@direction]="character.direction" [src]="characterList[0][character.expression]">
+<div style="position: absolute;bottom: 0px;z-index: i;" class="mt-5" *ngFor="let character of stage; let i = index">
+    <div [@position]="character.content.position">
+        <img style="width: 200px;" [@direction]="character.content.direction"
+            [src]="characterList[i][character.content.expression]">
     </div>
 </div>

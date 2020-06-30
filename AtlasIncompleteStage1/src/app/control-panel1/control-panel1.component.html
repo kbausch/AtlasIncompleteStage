@@ -1,6 +1,16 @@
-<p>control-panel1 works!</p>
-<div class="list-group">
-    <button type="button" class="list-group-item list-group-item-action" *ngFor="let character of characterList">
-        {{character.key}}
-    </button>
+<div class="row m-4">
+    <div class="list-group col-2">
+        Characters
+        <button type="button" class="list-group-item list-group-item-action"
+            *ngFor="let character of characterList; let i = index" (click)="addChar(character.key);">
+            {{character.key}}{{i}}
+        </button>
+    </div>
+    <div class="list-group col-2">
+        Stage
+        <button type="button" class="list-group-item list-group-item-action"
+            *ngFor="let character of stageList; let i = index" (click)="charNum.emit(i)">
+            {{character.key}}{{i}}
+        </button>
+    </div>
 </div>
