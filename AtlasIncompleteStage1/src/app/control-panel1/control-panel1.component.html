@@ -1,1 +1,6 @@
 <p>control-panel1 works!</p>
+<div class="list-group">
+    <button type="button" class="list-group-item list-group-item-action" *ngFor="let character of characterList">
+        {{character.key}}
+    </button>
+</div>
