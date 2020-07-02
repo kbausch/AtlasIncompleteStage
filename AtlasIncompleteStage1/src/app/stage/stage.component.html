@@ -1,6 +1,6 @@
 <div style="position: absolute;bottom: 0px;z-index: i;" class="mt-5" *ngFor="let character of stage; let i = index">
     <div [@position]="character.content.position">
         <img style="width: 200px;" [@direction]="character.content.direction"
-            [src]="characterList[i][character.content.expression]">
+            [src]="characterList[character.index].content[character.content.expression]">
     </div>
 </div>

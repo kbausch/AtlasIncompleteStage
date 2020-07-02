@@ -2,15 +2,15 @@
     <div class="list-group col-2">
         Characters
         <button type="button" class="list-group-item list-group-item-action"
-            *ngFor="let character of characterList; let i = index" (click)="addChar(character.key);">
+            *ngFor="let character of characterList; let i = index" (click)="toggleChar(character.key);">
             {{character.key}}{{i}}
         </button>
     </div>
     <div class="list-group col-2">
         Stage
         <button type="button" class="list-group-item list-group-item-action"
-            *ngFor="let character of stageList; let i = index" (click)="charNum.emit(i)">
-            {{character.key}}{{i}}
+            *ngFor="let character of stageList" (click)="activeChar.emit(character.key)">
+            {{character.key}}
         </button>
     </div>
 </div>

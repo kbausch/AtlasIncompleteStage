@@ -4,6 +4,6 @@
   background-repeat: no-repeat;
   background-size: cover;
   height:50vh;">
-  <app-stage [charNum]="controller"></app-stage>
+  <app-stage [activeChar]="controller"></app-stage>
 </div>
-<app-control-panel1 (charNum)="controller = $event"></app-control-panel1>
+<app-control-panel1 (activeChar)="controller = $event"></app-control-panel1>

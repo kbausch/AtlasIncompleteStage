@@ -1,6 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
+import { CharacterListModel } from '../shared/character-list-model.model';
+import { StageListModel } from '../shared/stage-list-model.model';
 
 @Component({
   selector: 'app-control-panel1',
@@ -9,9 +11,9 @@ import { map } from 'rxjs/operators';
 })
 export class ControlPanel1Component implements OnInit {
 
-  stageList: object[];
-  characterList: object;
-  @Output('charNum') charNum = new EventEmitter<number>();
+  stageList: StageListModel[];
+  characterList: CharacterListModel[];
+  @Output('activeChar') activeChar = new EventEmitter<string>();
 
   constructor(private db: AngularFireDatabase) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
@@ -23,29 +25,35 @@ export class ControlPanel1Component implements OnInit {
             content: a.payload.val()
           };
         });
-      })).subscribe(result => { this.stageList = result; console.log(this.stageList); });
-      db.list('/characters').snapshotChanges().pipe(
-        map(actions => {
-          return actions.map(a => {
-            return {
-              key: a.key,
-              content: a.payload.val()
-            };
-          });
-        })).subscribe(result => { this.characterList = result; console.log(this.characterList); });
+      })).subscribe(result => { this.stageList = result;});
+    db.list('/characters').snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          return {
+            key: a.key,
+            content: a.payload.val()
+          };
+        });
+      })).subscribe(result => { this.characterList = result;});
   }
 
   ngOnInit(): void {
   }
 
-  addChar(key: string){
+  toggleChar(key: string) {
     const updates = {};
-    updates['stage/'+ key] = {
-      direction: 'ArrowRight',
-      position: 0,
-      expression: 'default'
-    };
-    this.db.database.ref().update(updates);
+    if (this.stageList.find(x => x.key === key)) {
+      console.log("Found it!");
+      return this.db.database.ref().child('stage/' + key).remove();
+    } else {
+      console.log("Adding it!");
+      updates['stage/' + key] = {
+        direction: 'ArrowRight',
+        position: 0,
+        expression: 'default'
+      };
+      this.db.database.ref().update(updates);
+    }
   }
 
 }

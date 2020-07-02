@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'AtlasIncompleteStage1';
-  controller: number;
+  controller: string;
 }

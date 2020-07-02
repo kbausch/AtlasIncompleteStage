@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, Input } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { HostListener } from '@angular/core';
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { StageListModel } from '../shared/stage-list-model.model';
 
 import {
   trigger,
@@ -10,6 +11,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
+import { CharacterListModel } from '../shared/character-list-model.model';
 
 @Component({
   selector: 'app-stage',
@@ -51,25 +53,23 @@ import {
       })),
       state('ArrowLeft', style({
         transform: 'rotateY(180deg)'
-      })),
-      transition("* => *", animate('100ms ease'))
+      }))
     ])
   ]
 })
-export class StageComponent implements OnInit {
+export class StageComponent implements OnChanges {
 
-  characterList: object;
-  stage: object;
-  lastmove = 'ArrowRight';
+  characterList: CharacterListModel[];
+  stage: StageListModel[];
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     this.getInput(event.key);
   };
-  @Input('charNum') charNum: number;
+  @Input('activeChar') activeChar: string;
+  activeCharIndex: number;
 
   constructor(private db: AngularFireDatabase) {
-    db.list('/characters').valueChanges().subscribe(result => {this.characterList = result});
-    db.list('/stage').snapshotChanges().pipe(
+    db.list('/characters').snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           return {
@@ -77,92 +77,106 @@ export class StageComponent implements OnInit {
             content: a.payload.val()
           };
         });
+      })).subscribe(result => { this.characterList = result; console.log(result); });
+    db.list('/stage').snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          return {
+            key: a.key,
+            content: a.payload.val(),
+            index: this.characterList.indexOf(this.characterList.find(x => x.key === a.key))
+          };
+        });
       })).subscribe((result: any) => {
         console.log(result);
-      // The reason that I have to do this unideal for-loop is because if I simply "this.stage = result" everytime
-      // then the *ngFor loop will destroy and re-render each character, ruining the animations.
-      for (let i in result) {
+        // The reason that I have to do this unideal for-loop is because if I simply "this.stage = result" everytime
+        // then the *ngFor loop will destroy and re-render each character, ruining the animations.
         if (this.stage === undefined) {
           this.stage = result;
+        } else if (this.stage.length !== result.length) {
+          this.stage = result;
         } else {
-          this.stage[i].content.position = result[i].content.position;
-          this.stage[i].content.direction = result[i].content.direction;
-          this.stage[i].content.expression = result[i].content.expression;
+          for (let i in result) {
+            this.stage[i].content.position = result[i].content.position;
+            this.stage[i].content.direction = result[i].content.direction;
+            this.stage[i].content.expression = result[i].content.expression;
+          }
         }
-      }
-    });
+      });
   }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    if (this.activeChar) {
+      this.activeCharIndex = this.stage.indexOf(this.stage.find(x => x.key === this.activeChar));
+    }
   }
 
   getInput(key: string) {
-    const characterName = this.stage[this.charNum].key;
-    //console.log(key);
-    const updates = {};
-    updates['stage/'+characterName] = {
-      direction: this.lastmove,
-      position: this.stage[this.charNum].content.position,
-      expression: this.stage[this.charNum].content.expression
-    };
+    if (this.activeChar) {
+      //console.log(key);
+      const updates = {};
+      updates['stage/' + this.activeChar] = {
+        direction: this.stage[this.activeCharIndex].content.direction,
+        position: this.stage[this.activeCharIndex].content.position,
+        expression: this.stage[this.activeCharIndex].content.expression
+      };
 
-    if (key === 'ArrowRight') {
-      if (this.lastmove === 'ArrowRight') {
-        if (this.stage[this.charNum].content.position > 6) {
-          updates['stage/'+characterName].position = 0;
+      if (key === 'ArrowRight') {
+        if (this.stage[this.activeCharIndex].content.direction === 'ArrowRight') {
+          if (this.stage[this.activeCharIndex].content.position > 6) {
+            updates['stage/' + this.activeChar].position = 0;
+          } else {
+            updates['stage/' + this.activeChar].position++;
+          }
         } else {
-          updates['stage/'+characterName].position++;
+          updates['stage/' + this.activeChar].direction = 'ArrowRight';
         }
-      } else {
-        this.lastmove = 'ArrowRight';
-        updates['stage/'+characterName].direction = this.lastmove;
-      }
-    } else if (key === 'ArrowLeft') {
-      if (this.lastmove === 'ArrowLeft') {
-        if (this.stage[this.charNum].content.position < 1) {
-          updates['stage/'+characterName].position = 7;
+      } else if (key === 'ArrowLeft') {
+        if (this.stage[this.activeCharIndex].content.direction === 'ArrowLeft') {
+          if (this.stage[this.activeCharIndex].content.position < 1) {
+            updates['stage/' + this.activeChar].position = 7;
+          } else {
+            updates['stage/' + this.activeChar].position--;
+          }
         } else {
-          updates['stage/'+characterName].position--;
+          updates['stage/' + this.activeChar].direction = 'ArrowLeft';
         }
-      } else {
-        this.lastmove = 'ArrowLeft';
-        updates['stage/'+characterName].direction = this.lastmove;
       }
+      else if (key === 'q') {
+        updates['stage/' + this.activeChar].expression = 'angry';
+      }
+      else if (key === 'w') {
+        updates['stage/' + this.activeChar].expression = 'concern';
+      }
+      else if (key === 'e') {
+        updates['stage/' + this.activeChar].expression = 'confused';
+      }
+      else if (key === 'r') {
+        updates['stage/' + this.activeChar].expression = 'default';
+      }
+      else if (key === 't') {
+        updates['stage/' + this.activeChar].expression = 'furious';
+      }
+      else if (key === 'y') {
+        updates['stage/' + this.activeChar].expression = 'happy';
+      }
+      else if (key === 'u') {
+        updates['stage/' + this.activeChar].expression = 'kiss';
+      }
+      else if (key === 'i') {
+        updates['stage/' + this.activeChar].expression = 'oh';
+      }
+      else if (key === 'o') {
+        updates['stage/' + this.activeChar].expression = 'question';
+      }
+      else if (key === 'p') {
+        updates['stage/' + this.activeChar].expression = 'sad';
+      }
+      else if (key === '[') {
+        updates['stage/' + this.activeChar].expression = 'wink';
+      }
+      this.db.database.ref().update(updates);
     }
-    else if (key === 'q') {
-      updates['stage/'+characterName].expression = 'angry';
-    }
-    else if (key === 'w') {
-      updates['stage/'+characterName].expression = 'concern';
-    }
-    else if (key === 'e') {
-      updates['stage/'+characterName].expression = 'confused';
-    }
-    else if (key === 'r') {
-      updates['stage/'+characterName].expression = 'default';
-    }
-    else if (key === 't') {
-      updates['stage/'+characterName].expression = 'furious';
-    }
-    else if (key === 'y') {
-      updates['stage/'+characterName].expression = 'happy';
-    }
-    else if (key === 'u') {
-      updates['stage/'+characterName].expression = 'kiss';
-    }
-    else if (key === 'i') {
-      updates['stage/'+characterName].expression = 'oh';
-    }
-    else if (key === 'o') {
-      updates['stage/'+characterName].expression = 'question';
-    }
-    else if (key === 'p') {
-      updates['stage/'+characterName].expression = 'sad';
-    }
-    else if (key === '[') {
-      updates['stage/'+characterName].expression = 'wink';
-    }
-    this.db.database.ref().update(updates);
   }
 
 }
