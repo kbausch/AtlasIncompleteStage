@@ -1,16 +1,25 @@
 <div class="row m-2">
-    <div class="list-group col-2">
+    <div class="list-group col-6 col-sm-2">
         Characters
-        <button type="button" class="list-group-item list-group-item-action"
-            *ngFor="let character of characterList" (click)="toggleChar(character.key)">
-            {{character.key}}
-            </button>
-    </div>
-    <div class="list-group col-2">
-        Stage
-        <button type="button" class="list-group-item list-group-item-action"
-            *ngFor="let character of stageList" (click)="activeChar.emit(character.key)">
+        <button type="button" class="list-group-item list-group-item-action" *ngFor="let character of characterList"
+            (click)="toggleChar(character.key)">
             {{character.key}}
         </button>
+    </div>
+    <div class="list-group col-6 col-sm-2">
+        Stage
+        <button type="button" class="list-group-item list-group-item-action" *ngFor="let character of stageList"
+            (click)="selectChar(character.key);">
+            {{character.key}}
+        </button>
+    </div>
+    <div class="row col-12 col-sm-8">
+        <div class="card col-3 text-center" *ngFor="let emote of emotes | keyvalue" style="width: 250px">
+            <img [src]="emote.value" class="card-img-top" [alt]="emote.key">
+            <div class="card-body">
+                <h5 class="card-title">{{emote.key}}</h5>
+                <!--<a href="#" class="btn btn-primary">Bind Key</a>-->
+            </div>
+        </div>
     </div>
 </div>

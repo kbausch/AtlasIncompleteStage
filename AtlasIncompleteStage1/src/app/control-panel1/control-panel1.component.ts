@@ -14,6 +14,8 @@ export class ControlPanel1Component implements OnInit {
   stageList: StageListModel[];
   characterList: CharacterListModel[];
   @Output('activeChar') activeChar = new EventEmitter<string>();
+  selectedChar: string;
+  emotes: {[key: number]: string};
 
   constructor(private db: AngularFireDatabase) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
@@ -25,7 +27,7 @@ export class ControlPanel1Component implements OnInit {
             content: a.payload.val()
           };
         });
-      })).subscribe(result => { this.stageList = result;});
+      })).subscribe(result => { this.stageList = result; });
     db.list('/characters').snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -34,7 +36,7 @@ export class ControlPanel1Component implements OnInit {
             content: a.payload.val()
           };
         });
-      })).subscribe(result => { this.characterList = result;});
+      })).subscribe(result => { this.characterList = result; });
   }
 
   ngOnInit(): void {
@@ -43,10 +45,13 @@ export class ControlPanel1Component implements OnInit {
   toggleChar(key: string): Promise<any> {
     const updates = {};
     if (this.stageList.find(x => x.key === key)) {
-      this.activeChar.emit(null);
+      if(this.selectedChar === key){
+        this.selectedChar = null;
+        this.activeChar.emit(null);
+        this.emotes = null;
+      }
       return this.db.database.ref().child('stage/' + key).remove();
     } else {
-      console.log("Adding it!");
       updates['stage/' + key] = {
         direction: 'ArrowRight',
         position: 0,
@@ -54,6 +59,12 @@ export class ControlPanel1Component implements OnInit {
       };
       return this.db.database.ref().update(updates);
     }
+  }
+
+  selectChar(key: string){
+    this.selectedChar = key;
+    this.emotes = this.characterList[this.characterList.indexOf(this.characterList.find(x => x.key === key))].content;
+    this.activeChar.emit(key);
   }
 
 }
