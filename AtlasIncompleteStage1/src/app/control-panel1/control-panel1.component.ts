@@ -40,10 +40,10 @@ export class ControlPanel1Component implements OnInit {
   ngOnInit(): void {
   }
 
-  toggleChar(key: string) {
+  toggleChar(key: string): Promise<any> {
     const updates = {};
     if (this.stageList.find(x => x.key === key)) {
-      console.log("Found it!");
+      this.activeChar.emit(null);
       return this.db.database.ref().child('stage/' + key).remove();
     } else {
       console.log("Adding it!");
@@ -52,7 +52,7 @@ export class ControlPanel1Component implements OnInit {
         position: 0,
         expression: 'default'
       };
-      this.db.database.ref().update(updates);
+      return this.db.database.ref().update(updates);
     }
   }
 

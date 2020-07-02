@@ -1,9 +1,13 @@
-{{controller}}
 <div class="col-12" style="overflow-x: hidden; 
   background-image: url('https://cdn.discordapp.com/attachments/467185767593148418/726984522897424464/Deciduous_Forest_Background_-_Road_No_Clearing.png');
   background-repeat: no-repeat;
   background-size: cover;
   height:50vh;">
   <app-stage [activeChar]="controller"></app-stage>
+</div>
+<div class="row m-1" *ngIf="controller">
+  <ngb-alert [dismissible]="false" class="w-100 text-center">
+    Your current active character is: <strong>{{controller}}</strong>
+  </ngb-alert>
 </div>
 <app-control-panel1 (activeChar)="controller = $event"></app-control-panel1>

@@ -1,10 +1,10 @@
-<div class="row m-4">
+<div class="row m-2">
     <div class="list-group col-2">
         Characters
         <button type="button" class="list-group-item list-group-item-action"
-            *ngFor="let character of characterList; let i = index" (click)="toggleChar(character.key);">
-            {{character.key}}{{i}}
-        </button>
+            *ngFor="let character of characterList" (click)="toggleChar(character.key)">
+            {{character.key}}
+            </button>
     </div>
     <div class="list-group col-2">
         Stage
