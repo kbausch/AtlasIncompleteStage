@@ -95,6 +95,7 @@ export class StageComponent implements OnChanges {
           this.stage = result;
         } else if (this.stage.length !== result.length) {
           this.stage = result;
+          this.activeCharIndex = this.stage.indexOf(this.stage.find(x => x.key === this.activeChar));
         } else {
           for (let i in result) {
             this.stage[i].content.position = result[i].content.position;
