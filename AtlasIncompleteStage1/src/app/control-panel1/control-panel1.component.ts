@@ -66,16 +66,17 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
         direction: 'ArrowRight',
         position: 0,
         expression: 'default',
-        visible: true
+        visible: true,
+        level: 1
       };
       return this.db.database.ref().update(updates);
     }
   }
 
-  selectChar(key: string) {
+  selectChar(key: string): void {
     this.selectedChar = key;
     this.emotes = this.characterList[this.characterList.indexOf(this.characterList.find(x => x.key === key))].content;
-    this.activeChar.emit(key);
+    return this.activeChar.emit(key);
   }
 
   addImg(img: string): Promise<any> {

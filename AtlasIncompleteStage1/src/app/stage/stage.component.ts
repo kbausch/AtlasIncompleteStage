@@ -1,8 +1,11 @@
 import { Component, OnChanges, Input } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { HostListener } from '@angular/core';
+import { ResizeEvent } from 'angular-resizable-element';
 import { map } from 'rxjs/operators';
+
 import { StageListModel } from '../shared/stage-list-model.model';
+import { CharacterListModel } from '../shared/character-list-model.model';
 
 import {
   trigger,
@@ -11,8 +14,6 @@ import {
   animate,
   transition
 } from '@angular/animations';
-import { CharacterListModel } from '../shared/character-list-model.model';
-import { ResizeEvent } from 'angular-resizable-element';
 
 @Component({
   selector: 'app-stage',
@@ -55,6 +56,16 @@ import { ResizeEvent } from 'angular-resizable-element';
       state('ArrowLeft', style({
         transform: 'rotateY(180deg)'
       }))
+    ]),
+    trigger('level', [
+      state('0', style({
+        transform: 'translateY(100%)'
+      })),
+      state('1', style({
+        transform: 'translateY(0%)'
+      })),
+      transition("1 => 0", animate('300ms ease-in')),
+      transition("0 => 1", animate('300ms ease-out'))
     ])
   ]
 })
@@ -70,11 +81,16 @@ export class StageComponent implements OnChanges {
   handleKeyboardEvent(event: KeyboardEvent) {
     this.getInput(event.key);
   };
-
+  @HostListener('document:keydown', ['$event'])
+  stopUpDown(event: KeyboardEvent) {
+    if (event.key === 'ArrowUp' || 'ArrowDown') {
+      event.preventDefault();
+    }
+  };
   @Input('activeChar') activeChar: string;
   activeCharIndex: number;
 
-  img : string;
+  img: string;
   imgInput = false;
 
   constructor(private db: AngularFireDatabase) {
@@ -114,6 +130,7 @@ export class StageComponent implements OnChanges {
               this.stage[i].content.direction = result[i].content.direction;
               this.stage[i].content.expression = result[i].content.expression;
               this.stage[i].content.visible = result[i].content.visible;
+              this.stage[i].content.level = result[i].content.level;
             } else if (this.stage[i].content !== result[i].content) {
               //This else if will fire if the img is different
               this.stage[i].content = result[i].content;
@@ -138,12 +155,13 @@ export class StageComponent implements OnChanges {
         direction: this.stage[this.activeCharIndex].content.direction,
         position: this.stage[this.activeCharIndex].content.position,
         expression: this.stage[this.activeCharIndex].content.expression,
-        visible: this.stage[this.activeCharIndex].content.visible
+        visible: this.stage[this.activeCharIndex].content.visible,
+        level: this.stage[this.activeCharIndex].content.level,
       };
 
       if (key === 'ArrowRight') {
         if (this.stage[this.activeCharIndex].content.direction === 'ArrowRight') {
-          if (this.stage[this.activeCharIndex].content.position > 6) {
+          if (this.stage[this.activeCharIndex].content.position === 7) {
             updates['stage/' + this.activeChar].position = 0;
           } else {
             updates['stage/' + this.activeChar].position++;
@@ -153,7 +171,7 @@ export class StageComponent implements OnChanges {
         }
       } else if (key === 'ArrowLeft') {
         if (this.stage[this.activeCharIndex].content.direction === 'ArrowLeft') {
-          if (this.stage[this.activeCharIndex].content.position < 1) {
+          if (this.stage[this.activeCharIndex].content.position === 0) {
             updates['stage/' + this.activeChar].position = 7;
           } else {
             updates['stage/' + this.activeChar].position--;
@@ -161,6 +179,12 @@ export class StageComponent implements OnChanges {
         } else {
           updates['stage/' + this.activeChar].direction = 'ArrowLeft';
         }
+      }
+      else if (key === 'ArrowUp') {
+        updates['stage/' + this.activeChar].level = 1;
+      }
+      else if (key === 'ArrowDown') {
+        updates['stage/' + this.activeChar].level = 0;
       }
       else if (key === 'q') {
         updates['stage/' + this.activeChar].expression = 'angry';
@@ -195,7 +219,7 @@ export class StageComponent implements OnChanges {
       else if (key === '[') {
         updates['stage/' + this.activeChar].expression = 'wink';
       }
-      else if (key === 'v'){
+      else if (key === 'v') {
         updates['stage/' + this.activeChar].visible = !updates['stage/' + this.activeChar].visible;
       }
       this.db.database.ref().update(updates);

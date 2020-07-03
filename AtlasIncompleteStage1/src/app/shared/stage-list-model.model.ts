@@ -5,6 +5,7 @@ export class StageListModel {
         expression?: string;
         position?: number;
         visible?: boolean;
+        level?: number;
     };
     index?: number;
 }
