@@ -25,4 +25,11 @@
             </div>
         </div>
     </div>
+    <form class="row col-12 justify-content-around mt-5" (ngSubmit)="addImg()" #imgForm="ngForm">
+        <div class="card col-12 p-3 form-group">
+            <input type="text" class="form-control" id="text" placeholder="Insert your background image URL here..."
+                [(ngModel)]="insertIMG" name="text" maxlength="800" />
+            <button type="submit" class=" mt-1 btn btn-success" [disabled]="!insertIMG">Submit</button>
+        </div>
+    </form>
 </div>

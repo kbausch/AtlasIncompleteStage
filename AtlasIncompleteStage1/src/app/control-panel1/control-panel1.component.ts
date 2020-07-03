@@ -20,6 +20,8 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   selectedChar: string;
   emotes: {[key: string]: string};
 
+  insertIMG: string;
+
   constructor(private db: AngularFireDatabase) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
    this.stageSub = db.list('/stage').snapshotChanges().pipe(
@@ -73,6 +75,12 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
     this.selectedChar = key;
     this.emotes = this.characterList[this.characterList.indexOf(this.characterList.find(x => x.key === key))].content;
     this.activeChar.emit(key);
+  }
+
+  addImg() {
+    const updates = {};
+    updates['stage/img'] = this.insertIMG;
+    return this.db.database.ref().update(updates);
   }
 
 }
