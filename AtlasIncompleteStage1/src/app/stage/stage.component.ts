@@ -51,7 +51,7 @@ export class StageComponent implements OnChanges {
             content: a.payload.val()
           };
         });
-      })).subscribe(result => { this.characterList = result; console.log(result); });
+      })).subscribe(result => this.characterList = result);
     db.list('/stage').snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -62,7 +62,6 @@ export class StageComponent implements OnChanges {
           };
         });
       })).subscribe((result: any[]) => {
-        console.log(result);
         // The reason that I have to do this unideal for-loop is because if I simply "this.stage = result" everytime
         // then the *ngFor loop will destroy and re-render each character, ruining the animations.
 

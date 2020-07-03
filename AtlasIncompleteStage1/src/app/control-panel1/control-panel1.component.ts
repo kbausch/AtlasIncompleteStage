@@ -32,7 +32,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
             content: a.payload.val()
           };
         });
-      })).subscribe(result => { this.stageList = result; });
+      })).subscribe(result => this.stageList = result);
     this.charSub = db.list('/characters').snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
