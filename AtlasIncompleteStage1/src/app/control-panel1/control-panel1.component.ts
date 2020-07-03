@@ -1,25 +1,28 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
 import { CharacterListModel } from '../shared/character-list-model.model';
 import { StageListModel } from '../shared/stage-list-model.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-control-panel1',
   templateUrl: './control-panel1.component.html',
   styleUrls: ['./control-panel1.component.scss']
 })
-export class ControlPanel1Component implements OnInit {
+export class ControlPanel1Component implements OnInit, OnDestroy {
 
   stageList: StageListModel[];
   characterList: CharacterListModel[];
   @Output('activeChar') activeChar = new EventEmitter<string>();
+  stageSub: Subscription;
+  charSub: Subscription;
   selectedChar: string;
-  emotes: {[key: number]: string};
+  emotes: {[key: string]: string};
 
   constructor(private db: AngularFireDatabase) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
-    db.list('/stage').snapshotChanges().pipe(
+   this.stageSub = db.list('/stage').snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           return {
@@ -28,7 +31,7 @@ export class ControlPanel1Component implements OnInit {
           };
         });
       })).subscribe(result => { this.stageList = result; });
-    db.list('/characters').snapshotChanges().pipe(
+    this.charSub = db.list('/characters').snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           return {
@@ -40,6 +43,11 @@ export class ControlPanel1Component implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.stageSub.unsubscribe();
+    this.charSub.unsubscribe();
   }
 
   toggleChar(key: string): Promise<any> {

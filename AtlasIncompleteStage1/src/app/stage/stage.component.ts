@@ -12,6 +12,7 @@ import {
   transition
 } from '@angular/animations';
 import { CharacterListModel } from '../shared/character-list-model.model';
+import { ResizeEvent } from 'angular-resizable-element';
 
 @Component({
   selector: 'app-stage',
@@ -26,19 +27,19 @@ import { CharacterListModel } from '../shared/character-list-model.model';
         transform: 'translateX(0vw)'
       })),
       state('2', style({
-        transform: 'translateX(17vw)'
+        transform: 'translateX(16vw)'
       })),
       state('3', style({
-        transform: 'translateX(34vw)'
+        transform: 'translateX(32vw)'
       })),
       state('4', style({
-        transform: 'translateX(51vw)'
+        transform: 'translateX(48vw)'
       })),
       state('5', style({
-        transform: 'translateX(68vw)'
+        transform: 'translateX(64vw)'
       })),
       state('6', style({
-        transform: 'translateX(85vw)'
+        transform: 'translateX(80vw)'
       })),
       state('7', style({
         transform: 'translateX(105vw)'
@@ -59,14 +60,22 @@ import { CharacterListModel } from '../shared/character-list-model.model';
 })
 export class StageComponent implements OnChanges {
 
+  height: object = {
+    height: '60vh'
+  };
+
   characterList: CharacterListModel[];
   stage: StageListModel[];
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     this.getInput(event.key);
   };
+
   @Input('activeChar') activeChar: string;
   activeCharIndex: number;
+
+  img : string;
+  imgInput = false;
 
   constructor(private db: AngularFireDatabase) {
     db.list('/characters').snapshotChanges().pipe(
@@ -87,20 +96,28 @@ export class StageComponent implements OnChanges {
             index: this.characterList.indexOf(this.characterList.find(x => x.key === a.key))
           };
         });
-      })).subscribe((result: any) => {
+      })).subscribe((result: any[]) => {
         console.log(result);
         // The reason that I have to do this unideal for-loop is because if I simply "this.stage = result" everytime
         // then the *ngFor loop will destroy and re-render each character, ruining the animations.
+
         if (this.stage === undefined) {
           this.stage = result;
+          this.img = result[result.indexOf(result.find(x => x.key === 'img'))].content;
         } else if (this.stage.length !== result.length) {
           this.stage = result;
           this.activeCharIndex = this.stage.indexOf(this.stage.find(x => x.key === this.activeChar));
         } else {
           for (let i in result) {
-            this.stage[i].content.position = result[i].content.position;
-            this.stage[i].content.direction = result[i].content.direction;
-            this.stage[i].content.expression = result[i].content.expression;
+            if (this.stage[i].key !== 'img') {
+              this.stage[i].content.position = result[i].content.position;
+              this.stage[i].content.direction = result[i].content.direction;
+              this.stage[i].content.expression = result[i].content.expression;
+            } else if (this.stage[i].content !== result[i].content) {
+              //This else if will fire if the img is different
+              this.stage[i].content = result[i].content;
+              this.img = result[i].content;
+            }
           }
         }
       });
@@ -179,5 +196,12 @@ export class StageComponent implements OnChanges {
       this.db.database.ref().update(updates);
     }
   }
+
+  onResizeEnd(event: ResizeEvent): void {
+    this.height = {
+      height: `${event.rectangle.height}px`
+    };
+  }
+
 
 }

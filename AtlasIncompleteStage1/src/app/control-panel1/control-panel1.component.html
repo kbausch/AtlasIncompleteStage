@@ -1,20 +1,23 @@
-<div class="row m-2">
+<div class="row m-2 text-center">
     <div class="list-group col-6 col-sm-2">
-        Characters
+        Add/Remove Character
         <button type="button" class="list-group-item list-group-item-action" *ngFor="let character of characterList"
             (click)="toggleChar(character.key)">
             {{character.key}}
         </button>
     </div>
     <div class="list-group col-6 col-sm-2">
-        Stage
-        <button type="button" class="list-group-item list-group-item-action" *ngFor="let character of stageList"
+        Select Character on Stage
+        <div *ngFor="let character of stageList">
+        <button type="button" class="list-group-item list-group-item-action" *ngIf="character.key !== 'img'"
             (click)="selectChar(character.key);">
-            {{character.key}}
+            <h5>{{character.key}}</h5>
+            Position: {{character.content.position}}
         </button>
     </div>
+    </div>
     <div class="row col-12 col-sm-8">
-        <div class="card col-3 text-center" *ngFor="let emote of emotes | keyvalue" style="width: 250px">
+        <div class="card col-6 col-md-4 col-lg-3" *ngFor="let emote of emotes | keyvalue" style="width: 250px">
             <img [src]="emote.value" class="card-img-top" [alt]="emote.key">
             <div class="card-body">
                 <h5 class="card-title">{{emote.key}}</h5>

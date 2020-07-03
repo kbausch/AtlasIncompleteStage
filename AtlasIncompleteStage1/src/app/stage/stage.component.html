@@ -1,6 +1,10 @@
-<div style="position: absolute;bottom: 0px;z-index: i;" class="mt-5" *ngFor="let character of stage; let i = index">
-    <div [@position]="character.content.position">
-        <img style="width: 200px;" [@direction]="character.content.direction"
-            [src]="characterList[character.index].content[character.content.expression]">
+<div class="col-12 stage" [ngStyle]="height" [style.background-image]="'url('+ img + ')'" mwlResizable
+    [enableGhostResize]="true" [resizeEdges]="{ bottom: true, right: false, top: false, left: false }"
+    (resizeEnd)="onResizeEnd($event)">
+    <div style="position: absolute;bottom: 0px;z-index: i;" *ngFor="let character of stage; let i = index">
+        <div [@position]="character.content.position" *ngIf="character.key !== 'img'">
+            <img style="width: 250px;" [@direction]="character.content.direction"
+                [src]="characterList[character.index].content[character.content.expression]">
+        </div>
     </div>
 </div>

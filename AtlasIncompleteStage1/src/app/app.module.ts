@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ResizableModule } from 'angular-resizable-element';
 
 import { AppComponent } from './app.component';
 import { StageComponent } from './stage/stage.component';
@@ -20,7 +21,8 @@ import { environment } from '../environments/environment';
     BrowserModule,
     BrowserAnimationsModule,
     NgbModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig)
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    ResizableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
