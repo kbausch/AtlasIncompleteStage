@@ -3,7 +3,7 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "dist",
+    "public": "dist/AtlasIncompleteStage1",
     "ignore": [
       "firebase.json",
       "**/.*",
