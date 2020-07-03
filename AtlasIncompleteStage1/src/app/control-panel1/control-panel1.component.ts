@@ -18,13 +18,13 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   stageSub: Subscription;
   charSub: Subscription;
   selectedChar: string;
-  emotes: {[key: string]: string};
+  emotes: { [key: string]: string };
 
   insertIMG: string;
 
   constructor(private db: AngularFireDatabase) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
-   this.stageSub = db.list('/stage').snapshotChanges().pipe(
+    this.stageSub = db.list('/stage').snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           return {
@@ -41,7 +41,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
             content: a.payload.val()
           };
         });
-      })).subscribe(result => { this.characterList = result; });
+      })).subscribe((result: CharacterListModel[]) => this.characterList = result);
   }
 
   ngOnInit(): void {
@@ -55,7 +55,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   toggleChar(key: string): Promise<any> {
     const updates = {};
     if (this.stageList.find(x => x.key === key)) {
-      if(this.selectedChar === key){
+      if (this.selectedChar === key) {
         this.selectedChar = null;
         this.activeChar.emit(null);
         this.emotes = null;
@@ -65,21 +65,23 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
       updates['stage/' + key] = {
         direction: 'ArrowRight',
         position: 0,
-        expression: 'default'
+        expression: 'default',
+        visible: true
       };
       return this.db.database.ref().update(updates);
     }
   }
 
-  selectChar(key: string){
+  selectChar(key: string) {
     this.selectedChar = key;
     this.emotes = this.characterList[this.characterList.indexOf(this.characterList.find(x => x.key === key))].content;
     this.activeChar.emit(key);
   }
 
-  addImg() {
+  addImg(img: string): Promise<any> {
     const updates = {};
-    updates['stage/img'] = this.insertIMG;
+    updates['stage/img'] = img;
+    this.insertIMG = null;
     return this.db.database.ref().update(updates);
   }
 

@@ -3,7 +3,7 @@
     (resizeEnd)="onResizeEnd($event)">
     <div style="position: absolute;bottom: 0px;z-index: i;" *ngFor="let character of stage; let i = index">
         <div [@position]="character.content.position" *ngIf="character.key !== 'img'">
-            <img style="width: 250px;" [@direction]="character.content.direction"
+            <img style="width: 250px;" [@direction]="character.content.direction" [hidden]="!character.content.visible"
                 [src]="characterList[character.index].content[character.content.expression]">
         </div>
     </div>

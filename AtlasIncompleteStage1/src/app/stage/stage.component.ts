@@ -113,6 +113,7 @@ export class StageComponent implements OnChanges {
               this.stage[i].content.position = result[i].content.position;
               this.stage[i].content.direction = result[i].content.direction;
               this.stage[i].content.expression = result[i].content.expression;
+              this.stage[i].content.visible = result[i].content.visible;
             } else if (this.stage[i].content !== result[i].content) {
               //This else if will fire if the img is different
               this.stage[i].content = result[i].content;
@@ -136,7 +137,8 @@ export class StageComponent implements OnChanges {
       updates['stage/' + this.activeChar] = {
         direction: this.stage[this.activeCharIndex].content.direction,
         position: this.stage[this.activeCharIndex].content.position,
-        expression: this.stage[this.activeCharIndex].content.expression
+        expression: this.stage[this.activeCharIndex].content.expression,
+        visible: this.stage[this.activeCharIndex].content.visible
       };
 
       if (key === 'ArrowRight') {
@@ -192,6 +194,9 @@ export class StageComponent implements OnChanges {
       }
       else if (key === '[') {
         updates['stage/' + this.activeChar].expression = 'wink';
+      }
+      else if (key === 'v'){
+        updates['stage/' + this.activeChar].visible = !updates['stage/' + this.activeChar].visible;
       }
       this.db.database.ref().update(updates);
     }

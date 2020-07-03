@@ -4,6 +4,7 @@ export class StageListModel {
         direction?: string;
         expression?: string;
         position?: number;
+        visible?: boolean;
     };
     index?: number;
 }
