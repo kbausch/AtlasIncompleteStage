@@ -12,5 +12,7 @@ export class CharacterListModel {
         question?: string;
         sad?: string;
         wink?: string;
+        festive?: string;
     };
+    index?: number;
 }

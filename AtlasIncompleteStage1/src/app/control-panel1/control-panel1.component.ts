@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
-import { CharacterListModel } from '../shared/character-list-model.model';
-import { StageListModel } from '../shared/stage-list-model.model';
+import { CharacterListModel } from '../shared/models/character-list-model.model';
+import { StageListModel } from '../shared/models/stage-list-model.model';
 import { Subscription } from 'rxjs';
+import { DataretrieverService } from '../shared/services/dataretriever.service';
 
 @Component({
   selector: 'app-control-panel1',
@@ -22,26 +23,10 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
 
   insertIMG: string;
 
-  constructor(private db: AngularFireDatabase) {
+  constructor(private dr: DataretrieverService) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
-    this.stageSub = db.list('/stage').snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          return {
-            key: a.key,
-            content: a.payload.val()
-          };
-        });
-      })).subscribe(result => this.stageList = result);
-    this.charSub = db.list('/characters').snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          return {
-            key: a.key,
-            content: a.payload.val()
-          };
-        });
-      })).subscribe((result: CharacterListModel[]) => this.characterList = result);
+    this.stageSub = dr.getStage().subscribe(result => this.stageList = result);
+    this.charSub = this.dr.getCharacters().subscribe(result => this.characterList = result);
   }
 
   ngOnInit(): void {
@@ -60,7 +45,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
         this.activeChar.emit(null);
         this.emotes = null;
       }
-      return this.db.database.ref().child('stage/' + key).remove();
+      return this.dr.remove('stage/' + key);
     } else {
       updates['stage/' + key] = {
         direction: 'ArrowRight',
@@ -69,7 +54,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
         visible: true,
         level: 1
       };
-      return this.db.database.ref().update(updates);
+      return this.dr.update(updates);
     }
   }
 
@@ -83,7 +68,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
     const updates = {};
     updates['stage/img'] = img;
     this.insertIMG = null;
-    return this.db.database.ref().update(updates);
+    return this.dr.update(updates);
   }
 
 }

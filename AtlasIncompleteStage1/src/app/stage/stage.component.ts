@@ -1,12 +1,11 @@
 import { Component, OnChanges, Input } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
 import { HostListener } from '@angular/core';
 import { ResizeEvent } from 'angular-resizable-element';
-import { map } from 'rxjs/operators';
 import { position, level, direction } from '../shared/character-animation.animation';
 
-import { StageListModel } from '../shared/stage-list-model.model';
-import { CharacterListModel } from '../shared/character-list-model.model';
+import { StageListModel } from '../shared/models/stage-list-model.model';
+import { CharacterListModel } from '../shared/models/character-list-model.model';
+import { DataretrieverService } from '../shared/services/dataretriever.service';
 
 @Component({
   selector: 'app-stage',
@@ -42,57 +41,44 @@ export class StageComponent implements OnChanges {
     }
   }
 
-  constructor(private db: AngularFireDatabase) {
-    db.list('/characters').snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          return {
-            key: a.key,
-            content: a.payload.val()
-          };
-        });
-      })).subscribe(result => this.characterList = result);
-    db.list('/stage').snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          return {
-            key: a.key,
-            content: a.payload.val(),
-            index: this.characterList.indexOf(this.characterList.find(x => x.key === a.key))
-          };
-        });
-      })).subscribe((result: any[]) => {
-        // The reason that I have to do this unideal for-loop is because if I simply "this.stage = result" everytime
-        // then the *ngFor loop will destroy and re-render each character, ruining the animations.
-
-        if (this.stage === undefined) {
-          this.stage = result;
-          this.img = result[result.indexOf(result.find(x => x.key === 'img'))].content;
-        } else if (this.stage.length !== result.length) {
-          this.stage = result;
-          this.activeCharIndex = this.stage.indexOf(this.stage.find(x => x.key === this.activeChar));
-        } else {
-          for (const i in result) {
-            if (this.stage[i].key !== 'img') {
-              this.stage[i].content.position = result[i].content.position;
-              this.stage[i].content.direction = result[i].content.direction;
-              this.stage[i].content.expression = result[i].content.expression;
-              this.stage[i].content.visible = result[i].content.visible;
-              this.stage[i].content.level = result[i].content.level;
-            } else if (this.stage[i].content !== result[i].content) {
-              // This else if will fire if the img is different
-              this.stage[i].content = result[i].content;
-              this.img = result[i].content;
-            }
-          }
-        }
-      });
+  constructor(private dr: DataretrieverService) {
+    this.dr.getCharacters().subscribe(result => this.subStage(result));
   }
 
   ngOnChanges(): void {
     if (this.activeChar) {
       this.activeCharIndex = this.stage.indexOf(this.stage.find(x => x.key === this.activeChar));
     }
+  }
+
+  private subStage(result: CharacterListModel[]) {
+    this.characterList = result;
+    this.dr.getStage(result).subscribe((result: any[]) => {
+      // The reason that I have to do this unideal for-loop is because if I simply "this.stage = result" everytime
+      // then the *ngFor loop will destroy and re-render each character, ruining the animations.
+
+      if (this.stage === undefined) {
+        this.stage = result;
+        this.img = result[result.indexOf(result.find(x => x.key === 'img'))].content;
+      } else if (this.stage.length !== result.length) {
+        this.stage = result;
+        this.activeCharIndex = this.stage.indexOf(this.stage.find(x => x.key === this.activeChar));
+      } else {
+        for (const i in result) {
+          if (this.stage[i].key !== 'img') {
+            this.stage[i].content.position = result[i].content.position;
+            this.stage[i].content.direction = result[i].content.direction;
+            this.stage[i].content.expression = result[i].content.expression;
+            this.stage[i].content.visible = result[i].content.visible;
+            this.stage[i].content.level = result[i].content.level;
+          } else if (this.stage[i].content !== result[i].content) {
+            // This else if will fire if the img is different
+            this.stage[i].content = result[i].content;
+            this.img = result[i].content;
+          }
+        }
+      }
+    });
   }
 
   getInput(key: string) {
@@ -166,11 +152,13 @@ export class StageComponent implements OnChanges {
     else if (key === '[') {
       updates['stage/' + this.activeChar].expression = 'wink';
     }
+    else if (key === 'f') {
+      updates['stage/' + this.activeChar].expression = 'festive';
+    }
     else if (key === 'v') {
       updates['stage/' + this.activeChar].visible = !updates['stage/' + this.activeChar].visible;
     }
-    this.db.database.ref().update(updates);
-
+    this.dr.update(updates);
   }
 
   onResizeEnd(event: ResizeEvent): void {
