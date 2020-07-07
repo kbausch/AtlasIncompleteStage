@@ -23,10 +23,15 @@
         <form class="card col-6 col-md-4 col-lg-3" *ngFor="let emote of emotes | keyvalue" style="width: 250px"
             (ngSubmit)="bindEmote()" #emoteForm="ngForm" autocomplete="off">
             <img [src]="emote.value" class="card-img-top" [alt]="emote.key">
-            <div class="card-body form-group pb-0 mb-1">
+            <div class="card-body form-group p-0 mt-3 mb-1">
                 <h5 class="card-title">{{emote.key}}</h5>
-                <input type="text" class="form-control text-center" id="text" [(ngModel)]="emoteBinds[emote.key]" name="text" maxlength="1" />
-                <button class="btn btn-primary mt-1" [disabled]="!emoteBinds[emote.key]">Bind Key</button>
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control text-center" id="text" [(ngModel)]="emoteBinds[emote.key]"
+                        name="text" maxlength="1" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-primary" [disabled]="!emoteBinds[emote.key]">Bind Key</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
