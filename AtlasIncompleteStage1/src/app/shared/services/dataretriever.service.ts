@@ -10,6 +10,21 @@ import { StageListModel } from '../models/stage-list-model.model';
 })
 export class DataretrieverService {
 
+  emoteBinds: object = {
+    'q': 'angry',
+    'w': 'concern',
+    'e': 'confused',
+    'r': 'default',
+    't': 'furious',
+    'y': 'happy',
+    'u': 'kiss',
+    'i': 'oh',
+    'o': 'question',
+    'p': 'sad',
+    '[': 'wink',
+    'f': 'festive'
+  };
+
   constructor(private db: AngularFireDatabase) { }
 
   getCharacters(): Observable<CharacterListModel[]> {
@@ -55,5 +70,9 @@ export class DataretrieverService {
 
   remove(key: string): Promise<any> {
     return this.db.database.ref().child(key).remove();
+  }
+
+  addBinds(emote: object) {
+    this.emoteBinds = emote;
   }
 }

@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/database';
-import { map } from 'rxjs/operators';
 import { CharacterListModel } from '../shared/models/character-list-model.model';
 import { StageListModel } from '../shared/models/stage-list-model.model';
 import { Subscription } from 'rxjs';
 import { DataretrieverService } from '../shared/services/dataretriever.service';
+import { invert, findKey } from 'lodash';
 
 @Component({
   selector: 'app-control-panel1',
@@ -20,11 +19,13 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   charSub: Subscription;
   selectedChar: string;
   emotes: { [key: string]: string };
+  emoteBinds: object;
 
   insertIMG: string;
 
   constructor(private dr: DataretrieverService) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
+    this.emoteBinds = invert(dr.emoteBinds);
     this.stageSub = dr.getStage().subscribe(result => this.stageList = result);
     this.charSub = this.dr.getCharacters().subscribe(result => this.characterList = result);
   }
@@ -69,6 +70,10 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
     updates['stage/img'] = img;
     this.insertIMG = null;
     return this.dr.update(updates);
+  }
+
+  bindEmote() {
+    this.dr.addBinds(invert(this.emoteBinds));
   }
 
 }

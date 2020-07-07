@@ -20,13 +20,15 @@
         </div>
     </div>
     <div class="row col-12 col-sm-8">
-        <div class="card col-6 col-md-4 col-lg-3" *ngFor="let emote of emotes | keyvalue" style="width: 250px">
+        <form class="card col-6 col-md-4 col-lg-3" *ngFor="let emote of emotes | keyvalue" style="width: 250px"
+            (ngSubmit)="bindEmote()" #emoteForm="ngForm" autocomplete="off">
             <img [src]="emote.value" class="card-img-top" [alt]="emote.key">
-            <div class="card-body">
+            <div class="card-body form-group pb-0 mb-1">
                 <h5 class="card-title">{{emote.key}}</h5>
-                <!--<a href="#" class="btn btn-primary">Bind Key</a>-->
+                <input type="text" class="form-control text-center" id="text" [(ngModel)]="emoteBinds[emote.key]" [placeholder]="emoteBinds[emote.key]" name="text" maxlength="1" />
+                <button class="btn btn-primary mt-1" [disabled]="!emoteBinds[emote.key]">Bind Key</button>
             </div>
-        </div>
+        </form>
     </div>
     <form class="col-12 justify-content-around mt-5" (ngSubmit)="addImg(insertIMG)" #imgForm="ngForm">
         <div class="card row p-3 form-group">

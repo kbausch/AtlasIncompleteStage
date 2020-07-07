@@ -36,7 +36,7 @@ export class StageComponent implements OnChanges {
   }
   @HostListener('document:keydown', ['$event'])
   stopUpDown(event: KeyboardEvent) {
-    if (event.key === 'ArrowUp' || 'ArrowDown') {
+    if (event.keyCode === 40) {
       event.preventDefault();
     }
   }
@@ -119,44 +119,11 @@ export class StageComponent implements OnChanges {
     else if (key === 'ArrowDown') {
       updates['stage/' + this.activeChar].level = 0;
     }
-    else if (key === 'q') {
-      updates['stage/' + this.activeChar].expression = 'angry';
-    }
-    else if (key === 'w') {
-      updates['stage/' + this.activeChar].expression = 'concern';
-    }
-    else if (key === 'e') {
-      updates['stage/' + this.activeChar].expression = 'confused';
-    }
-    else if (key === 'r') {
-      updates['stage/' + this.activeChar].expression = 'default';
-    }
-    else if (key === 't') {
-      updates['stage/' + this.activeChar].expression = 'furious';
-    }
-    else if (key === 'y') {
-      updates['stage/' + this.activeChar].expression = 'happy';
-    }
-    else if (key === 'u') {
-      updates['stage/' + this.activeChar].expression = 'kiss';
-    }
-    else if (key === 'i') {
-      updates['stage/' + this.activeChar].expression = 'oh';
-    }
-    else if (key === 'o') {
-      updates['stage/' + this.activeChar].expression = 'question';
-    }
-    else if (key === 'p') {
-      updates['stage/' + this.activeChar].expression = 'sad';
-    }
-    else if (key === '[') {
-      updates['stage/' + this.activeChar].expression = 'wink';
-    }
-    else if (key === 'f') {
-      updates['stage/' + this.activeChar].expression = 'festive';
-    }
     else if (key === 'v') {
       updates['stage/' + this.activeChar].visible = !updates['stage/' + this.activeChar].visible;
+    }
+    else if(this.dr.emoteBinds[key]){
+      updates['stage/' + this.activeChar].expression = this.dr.emoteBinds[key];
     }
     this.dr.update(updates);
   }
