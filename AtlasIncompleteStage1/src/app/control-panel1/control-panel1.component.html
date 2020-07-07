@@ -25,7 +25,7 @@
             <img [src]="emote.value" class="card-img-top" [alt]="emote.key">
             <div class="card-body form-group pb-0 mb-1">
                 <h5 class="card-title">{{emote.key}}</h5>
-                <input type="text" class="form-control text-center" id="text" [(ngModel)]="emoteBinds[emote.key]" [placeholder]="emoteBinds[emote.key]" name="text" maxlength="1" />
+                <input type="text" class="form-control text-center" id="text" [(ngModel)]="emoteBinds[emote.key]" name="text" maxlength="1" />
                 <button class="btn btn-primary mt-1" [disabled]="!emoteBinds[emote.key]">Bind Key</button>
             </div>
         </form>

@@ -3,7 +3,7 @@ import { CharacterListModel } from '../shared/models/character-list-model.model'
 import { StageListModel } from '../shared/models/stage-list-model.model';
 import { Subscription } from 'rxjs';
 import { DataretrieverService } from '../shared/services/dataretriever.service';
-import { invert, findKey } from 'lodash';
+import { invert, find } from 'lodash';
 
 @Component({
   selector: 'app-control-panel1',
@@ -14,12 +14,15 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
 
   stageList: StageListModel[];
   characterList: CharacterListModel[];
-  @Output('activeChar') activeChar = new EventEmitter<string>();
-  stageSub: Subscription;
-  charSub: Subscription;
+
   selectedChar: string;
+  @Output('activeChar') activeChar = new EventEmitter<string>();
+
   emotes: { [key: string]: string };
   emoteBinds: object;
+
+  private stageSub: Subscription;
+  private charSub: Subscription;
 
   insertIMG: string;
 
@@ -39,7 +42,6 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   }
 
   toggleChar(key: string): Promise<any> {
-    const updates = {};
     if (this.stageList.find(x => x.key === key)) {
       if (this.selectedChar === key) {
         this.selectedChar = null;
@@ -48,6 +50,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
       }
       return this.dr.remove('stage/' + key);
     } else {
+      const updates = {};
       updates['stage/' + key] = {
         direction: 'ArrowRight',
         position: 0,
@@ -61,7 +64,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
 
   selectChar(key: string): void {
     this.selectedChar = key;
-    this.emotes = this.characterList[this.characterList.indexOf(this.characterList.find(x => x.key === key))].content;
+    this.emotes = find(this.characterList, function(o: CharacterListModel) { return o.key === key; }).content;
     return this.activeChar.emit(key);
   }
 

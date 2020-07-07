@@ -5,7 +5,9 @@ import { position, level, direction } from '../shared/character-animation.animat
 
 import { StageListModel } from '../shared/models/stage-list-model.model';
 import { CharacterListModel } from '../shared/models/character-list-model.model';
+
 import { DataretrieverService } from '../shared/services/dataretriever.service';
+import { find } from "lodash";
 
 @Component({
   selector: 'app-stage',
@@ -59,18 +61,14 @@ export class StageComponent implements OnChanges {
 
       if (this.stage === undefined) {
         this.stage = result;
-        this.img = result[result.indexOf(result.find(x => x.key === 'img'))].content;
+        this.img = find(result, ['key', 'img']).content;
       } else if (this.stage.length !== result.length) {
         this.stage = result;
         this.activeCharIndex = this.stage.indexOf(this.stage.find(x => x.key === this.activeChar));
       } else {
         for (const i in result) {
           if (this.stage[i].key !== 'img') {
-            this.stage[i].content.position = result[i].content.position;
-            this.stage[i].content.direction = result[i].content.direction;
-            this.stage[i].content.expression = result[i].content.expression;
-            this.stage[i].content.visible = result[i].content.visible;
-            this.stage[i].content.level = result[i].content.level;
+            this.stage[i].content = result[i].content;
           } else if (this.stage[i].content !== result[i].content) {
             // This else if will fire if the img is different
             this.stage[i].content = result[i].content;
@@ -122,7 +120,7 @@ export class StageComponent implements OnChanges {
     else if (key === 'v') {
       updates['stage/' + this.activeChar].visible = !updates['stage/' + this.activeChar].visible;
     }
-    else if(this.dr.emoteBinds[key]){
+    else if (this.dr.emoteBinds[key]) {
       updates['stage/' + this.activeChar].expression = this.dr.emoteBinds[key];
     }
     this.dr.update(updates);
