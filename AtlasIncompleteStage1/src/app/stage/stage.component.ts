@@ -25,7 +25,7 @@ export class StageComponent implements OnChanges {
   activeCharIndex: number;
 
   img: string;
-  imgInput = false;
+  animation: string;
 
   characterList: CharacterListModel[];
   stage: StageListModel[];
@@ -62,17 +62,24 @@ export class StageComponent implements OnChanges {
       if (this.stage === undefined) {
         this.stage = result;
         this.img = find(result, ['key', 'img']).content;
+        if (find(result, ['key', 'animation']) !== undefined) {
+          this.animation = find(result, ['key', 'animation']).content;
+        }
       } else if (this.stage.length !== result.length) {
         this.stage = result;
         this.activeCharIndex = this.stage.indexOf(this.stage.find(x => x.key === this.activeChar));
+        if (find(result, ['key', 'animation']) !== undefined) {
+          this.animation = find(result, ['key', 'animation']).content;
+        } else {
+          this.animation = null;
+        }
       } else {
         for (const i in result) {
-          if (this.stage[i].key !== 'img') {
-            this.stage[i].content = result[i].content;
-          } else if (this.stage[i].content !== result[i].content) {
-            // This else if will fire if the img is different
-            this.stage[i].content = result[i].content;
+          this.stage[i].content = result[i].content;
+          if (this.stage[i].key === 'img') {
             this.img = result[i].content;
+          } else if (this.stage[i].key === 'animation') {
+            this.animation = result[i].content;
           }
         }
       }

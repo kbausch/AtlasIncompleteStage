@@ -25,6 +25,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   private charSub: Subscription;
 
   insertIMG: string;
+  insertAnim: string;
 
   constructor(private dr: DataretrieverService) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
@@ -72,6 +73,13 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
     const updates = {};
     updates['stage/img'] = img;
     this.insertIMG = null;
+    return this.dr.update(updates);
+  }
+
+  addAnimation(img: string): Promise<any> {
+    const updates = {};
+    updates['stage/animation'] = img;
+    this.insertAnim = null;
     return this.dr.update(updates);
   }
 

@@ -9,7 +9,7 @@
     <div class="list-group col-6 col-sm-2">
         Select Character on Stage
         <div *ngFor="let character of stageList">
-            <button type="button" class="list-group-item list-group-item-action" *ngIf="character.key !== 'img'"
+            <button type="button" class="list-group-item list-group-item-action" *ngIf="character.key !== 'img' && character.key !== 'animation'"
                 (click)="selectChar(character.key);">
                 <h5>{{character.key}}</h5>
                 Position: {{character.content.position}}<br>
@@ -44,6 +44,18 @@
                     [disabled]="!insertIMG">Submit</button>
                 <button type="submit" class="border col-12 col-sm-6 btn btn-secondary"
                     (click)="insertIMG ='https://cdn.discordapp.com/attachments/467185767593148418/726984522897424464/Deciduous_Forest_Background_-_Road_No_Clearing.png'">Reset</button>
+            </div>
+        </div>
+    </form>
+    <form class="col-12 justify-content-around" (ngSubmit)="addAnimation(insertAnim)" #animForm="ngForm">
+        <div class="card row p-3 form-group">
+            <input type="text" class="form-control" id="text" placeholder="Insert your animation to play here..."
+                [(ngModel)]="insertAnim" name="text" maxlength="800" />
+            <div class="col-12 p-0">
+                <button type="submit" class="border col-12 col-sm-6 btn btn-success"
+                    [disabled]="!insertAnim">Submit</button>
+                <button type="submit" class="border col-12 col-sm-6 btn btn-secondary"
+                    (click)="insertAnim = null">Reset</button>
             </div>
         </div>
     </form>
