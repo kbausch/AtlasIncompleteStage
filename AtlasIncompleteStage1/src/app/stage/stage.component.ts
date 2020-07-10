@@ -124,6 +124,12 @@ export class StageComponent implements OnChanges {
     else if (this.dr.emoteBinds[key]) {
       updates['stage/' + this.activeChar].expression = this.dr.emoteBinds[key];
     }
+    else if (key === '=' && this.stage[this.activeCharIndex].content.zindex < 10) {
+      updates['stage/' + this.activeChar].zindex++;
+    }
+    else if (key === '-' && this.stage[this.activeCharIndex].content.zindex > 0) {
+      updates['stage/' + this.activeChar].zindex--;
+    }
     this.dr.update(updates);
   }
 

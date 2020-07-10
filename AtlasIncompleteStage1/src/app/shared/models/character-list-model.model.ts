@@ -14,5 +14,4 @@ export class CharacterListModel {
         wink?: string;
         festive?: string;
     };
-    index?: number;
 }

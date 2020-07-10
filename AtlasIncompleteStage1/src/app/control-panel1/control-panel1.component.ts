@@ -71,7 +71,8 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
         position: 0,
         expression: 'default',
         visible: true,
-        level: 1
+        level: 1,
+        zindex: 1
       };
       return this.dr.update(updates);
     }

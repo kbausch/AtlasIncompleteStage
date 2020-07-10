@@ -6,6 +6,7 @@ export class StageListModel {
         position?: number;
         visible?: boolean;
         level?: number;
+        zindex?: number;
     };
     index?: number;
 }
