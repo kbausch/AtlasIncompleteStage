@@ -22,13 +22,14 @@ You should also see a list of their available emotions:
 
 ## The Stage
 
-The stage is broken up into 2 Levels and 8 Positions with an "ease" transition between each of the spots. (Notice that Level 0 and Position 0 & 7 are "off-camera)" You can navigate your active character to the different locations (and change the direction your character is facing) by using the **Arrow Keys**.
+The stage is broken up into 2 Levels and 8 Positions with an "ease" transition between each of the spots. (Notice that Level 0 and Position 0 & 7 are "off-camera)" You can navigate your active character to the different locations (and change the direction your character is facing) by using the **Arrow Keys**. 
+It is also now possible to change your character's Z-Index with **-** and **=** keys to bring your character more forward or backward in relation to other characters.
 
 ![](https://lh4.googleusercontent.com/nfCLOq2Ltq9OWuhCAppTGLlkP4sOHLbeiqmuDd0d5SH3Cfj8iCa6xJH0NY_vqnArrVT4M7t9COSdv8pJ9kABxzW5-5fhC9Tw-MLKQ0tyPpqOsBxc0EwiOcvqO79jFnKkUvLfCxXA)
 
 The bottom of the stage is also draggable so you can resize the stage to better fit the characters. There is currently no way for players to resize the characters themselves.
 
-*(Note that resizing the stage will not ***resize*** the stage for everyone else connected)*
+*(Note that resizing the stage will ***not*** resize the stage for everyone else connected)*
 
 You can also change the background for everyone connected by using the URL box at the bottom of the application:
 
@@ -40,7 +41,7 @@ You can also add an animation for everyone connected to view by using the URL bo
 
 ![](https://lh6.googleusercontent.com/QydrPbB_2EAHG4zIIaeLLHiD1c6q6ByQHwRX-7F4Kt0xiSHKPLBxp9DZckqMBjGFkOcMiEmysY8GVm9olUmiOuFXoyg4_sbKygioFk3GD5xID3v1BAAwAxKxr5IARg1Jjz74cK1O)
 
-*(The Reset button will set the animation to be nothing and is used to clean the stage)*
+*(The Reset button will set the animation to be nothing and is used to "clean" the stage of animation)*
 
 ## Emoting
 
@@ -69,5 +70,3 @@ V: 'toggle invisibility'
 ```
 
 *(Note that you must press Shift+V to toggle visibility. Make sure you don't release Shift before releasing v. It's a bit buggy and particular right now)*
-
-*(Note that if your character doesn't have access that emotion, then they will disappear)*
