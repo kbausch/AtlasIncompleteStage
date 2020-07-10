@@ -10,20 +10,7 @@ import { StageListModel } from '../models/stage-list-model.model';
 })
 export class DataretrieverService {
 
-  emoteBinds: object = {
-    'q': 'angry',
-    'w': 'concern',
-    'e': 'confused',
-    'r': 'default',
-    't': 'furious',
-    'y': 'happy',
-    'u': 'kiss',
-    'i': 'oh',
-    'o': 'question',
-    'p': 'sad',
-    '[': 'wink',
-    'f': 'festive'
-  };
+  emoteBinds: object;
 
   constructor(private db: AngularFireDatabase) { }
 

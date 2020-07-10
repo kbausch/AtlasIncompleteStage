@@ -3,7 +3,7 @@ import { CharacterListModel } from '../shared/models/character-list-model.model'
 import { StageListModel } from '../shared/models/stage-list-model.model';
 import { Subscription } from 'rxjs';
 import { DataretrieverService } from '../shared/services/dataretriever.service';
-import { invert, find } from 'lodash';
+import { invert, find, pickBy, has, assign } from 'lodash';
 
 @Component({
   selector: 'app-control-panel1',
@@ -20,6 +20,20 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
 
   emotes: { [key: string]: string };
   emoteBinds: object;
+  bindPreferences: object = {
+    'q': 'angry',
+    'w': 'concern',
+    'e': 'confused',
+    'r': 'default',
+    't': 'furious',
+    'y': 'happy',
+    'u': 'kiss',
+    'i': 'oh',
+    'o': 'question',
+    'p': 'sad',
+    '[': 'wink',
+    'f': 'festive'
+  };
 
   private stageSub: Subscription;
   private charSub: Subscription;
@@ -29,9 +43,9 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
 
   constructor(private dr: DataretrieverService) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
-    this.emoteBinds = invert(dr.emoteBinds);
     this.stageSub = dr.getStage().subscribe(result => this.stageList = result);
-    this.charSub = this.dr.getCharacters().subscribe(result => this.characterList = result);
+    this.charSub = dr.getCharacters().subscribe(result => this.characterList = result);
+    dr.addBinds(this.bindPreferences);
   }
 
   ngOnInit(): void {
@@ -65,7 +79,9 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
 
   selectChar(key: string): void {
     this.selectedChar = key;
-    this.emotes = find(this.characterList, function(o: CharacterListModel) { return o.key === key; }).content;
+    this.emotes = find(this.characterList, (o: CharacterListModel) => o.key === key).content;
+    this.dr.addBinds(pickBy(this.bindPreferences, (value) => has(this.emotes, value)));
+    this.emoteBinds = invert(this.dr.emoteBinds);
     return this.activeChar.emit(key);
   }
 
@@ -85,6 +101,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
 
   bindEmote() {
     this.dr.addBinds(invert(this.emoteBinds));
+    assign(this.bindPreferences, this.dr.emoteBinds);
   }
 
 }

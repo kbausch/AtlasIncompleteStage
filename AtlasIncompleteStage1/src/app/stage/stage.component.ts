@@ -89,13 +89,7 @@ export class StageComponent implements OnChanges {
   getInput(key: string) {
     // console.log(key);
     const updates = {};
-    updates['stage/' + this.activeChar] = {
-      direction: this.stage[this.activeCharIndex].content.direction,
-      position: this.stage[this.activeCharIndex].content.position,
-      expression: this.stage[this.activeCharIndex].content.expression,
-      visible: this.stage[this.activeCharIndex].content.visible,
-      level: this.stage[this.activeCharIndex].content.level,
-    };
+    updates['stage/' + this.activeChar] = this.stage[this.activeCharIndex].content;
 
     if (key === 'ArrowRight') {
       if (this.stage[this.activeCharIndex].content.direction === 'ArrowRight') {
@@ -124,7 +118,7 @@ export class StageComponent implements OnChanges {
     else if (key === 'ArrowDown') {
       updates['stage/' + this.activeChar].level = 0;
     }
-    else if (key === 'v') {
+    else if (key === 'V') {
       updates['stage/' + this.activeChar].visible = !updates['stage/' + this.activeChar].visible;
     }
     else if (this.dr.emoteBinds[key]) {

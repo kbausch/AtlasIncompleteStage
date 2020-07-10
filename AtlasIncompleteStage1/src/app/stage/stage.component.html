@@ -4,7 +4,7 @@
     <div style="position: absolute;bottom: 0px;z-index: i;" *ngFor="let character of stage; let i = index">
         <div [@position]="character.content.position" *ngIf="character.key !== 'img' && character.key !== 'animation'">
             <div [@level]="character.content.level">
-                <img style="width: 250px;" [@direction]="character.content.direction"
+                <img style="width: 17vw;" [@direction]="character.content.direction"
                     [hidden]="!character.content.visible"
                     [src]="characterList[character.index].content[character.content.expression]">
             </div>
