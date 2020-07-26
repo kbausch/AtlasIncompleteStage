@@ -2,12 +2,16 @@
 import { Injectable, NgZone } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { Subject } from 'rxjs';
-import { words, split } from 'lodash';
-import { key } from '../models/sound-key';
+import { words, split, floor } from 'lodash';
+//import { key } from '../models/sound-key';
+import MicVolumeMeter from '@adrianhurt/mic-volume-meter';
+
+// My volume detector.
+const volumeMeter = new MicVolumeMeter();
 
 // I know... I am cheating...
-declare function require(path: string): any;
-const cmu = require('cmu-pronouncing-dictionary');
+//declare function require(path: string): any;
+//const cmu = require('cmu-pronouncing-dictionary');
 
 // TypeScript declaration for annyang
 declare let annyang: any;
@@ -17,7 +21,10 @@ declare let annyang: any;
 })
 export class SpeechService {
 
-  queue: number[] = [];
+  //queue: number[] = [];
+
+  activeCharacter: string;
+  lastHeight: number;
 
   errors$ = new Subject<{ [key: string]: any }>();
   listening = false;
@@ -32,14 +39,14 @@ export class SpeechService {
   init() {
     // Log anything the user says and what speech recognition thinks it might be
     annyang.addCallback('result', (userSaid: string[]) => {
-      words(userSaid[0].substring(this.indexCount)).forEach(word => {
+      /*words(userSaid[0].substring(this.indexCount)).forEach(word => {
         split(cmu[word], ' ').forEach(sound => {
           if (key[sound]) {
             this.queue.push(key[sound]);
           }
         });
       });
-      this.indexCount = userSaid[0].length;
+      this.indexCount = userSaid[0].length;*/
     });
     annyang.addCallback('soundstart', () => {
       this.indexCount = 0;
@@ -66,7 +73,7 @@ export class SpeechService {
   }
 
   startListening() {
-    annyang.start({ continuous: false });
+    /*annyang.start({ continuous: false });
     const recognition = annyang.getSpeechRecognizer();
     recognition.interimResults = true;
     recognition.onresult = (event) => {
@@ -81,21 +88,42 @@ export class SpeechService {
           }
         }
       }
-    }
-    setInterval(() => {
+    }*/
+    /*setInterval(() => {
       if (this.queue[0] !== undefined) {
         const updates = {};
         updates['stage/mouthy/expression'] = this.queue.shift();
         return this.db.database.ref().update(updates);
       }
-    }, 100);
+    }, 100);*/
+    volumeMeter.switchOn() // switches on the MicVolumeMeter
+      .then(() => {
+        const onThisNewMeasure = ({ volume, time }) => {
+          const vol = floor(volume * 100);
+          if (this.activeCharacter && vol !== this.lastHeight) {
+            console.log(vol, time);
+            const updates = {};
+            updates['stage/' + this.activeCharacter + '/height'] = vol;
+            this.lastHeight = vol;
+            this.db.database.ref().update(updates);
+          }
+        };
+        // starts the MicVolumeMeter that will call onNewMeasure each 100 milliseconds
+        volumeMeter.start({ onNewMeasure: onThisNewMeasure, interval: 75 });
+      })
+      .catch(() => alert('Permission denied!'));
     this.listening = true;
   }
 
   abort() {
-    annyang.abort();
+    //annyang.abort();
+    volumeMeter.switchOff();
     this.indexCount = 0;
     this.listening = false;
+  }
+
+  addActiveChar(char: string): void {
+    this.activeCharacter = char;
   }
 
 }

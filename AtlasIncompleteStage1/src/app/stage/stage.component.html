@@ -1,7 +1,7 @@
 <div class="col-12 stage px-0 flex-column-reverse" [ngStyle]="height" [style.background-image]="'url('+ img + ')'" mwlResizable
     [enableGhostResize]="true" [resizeEdges]="{ bottom: true, right: false, top: false, left: false }"
     (resizeEnd)="onResizeEnd($event)">
-    <div style="position: absolute;bottom: 0px;" *ngFor="let character of stage" [style.zIndex]="character.content.zindex">
+    <div style="position: absolute; transition: bottom 50ms;" *ngFor="let character of stage" [style.zIndex]="character.content.zindex" [style.bottom]="character.content.height-30 + 'px'">
         <div [@position]="character.content.position" *ngIf="character.key !== 'img' && character.key !== 'animation'">
             <div [@level]="character.content.level">
                 <img style="width: 17vw;" [@direction]="character.content.direction"
