@@ -38,6 +38,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   private stageSub: Subscription;
   private charSub: Subscription;
 
+  masterToggle: boolean;
   insertIMG: string;
   insertAnim: string;
 
@@ -72,7 +73,8 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
         expression: 'default',
         visible: true,
         level: 1,
-        zindex: 1
+        zindex: 1,
+        height: 0
       };
       return this.dr.update(updates);
     }
@@ -103,6 +105,32 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   bindEmote() {
     this.dr.addBinds(invert(this.emoteBinds));
     assign(this.bindPreferences, this.dr.emoteBinds);
+  }
+
+  clearStage(softClear: boolean, direction?: string, position?: number): Promise<any> {
+    const newStage = {};
+    if (!softClear) {
+      newStage['stage/img'] = this.stageList.find(character => character.key === 'img').content;
+      this.dr.remove('stage');
+      return this.dr.update(newStage);
+    }
+    this.stageList.forEach(character => {
+      if (character.key !== 'img' && character.key !== 'animation') {
+        if (direction) {
+          newStage['stage/' + character.key + '/direction'] = direction;
+          newStage['stage/' + character.key + '/position'] = position;
+        } else {
+          if (character.content.position < 4) {
+            newStage['stage/' + character.key + '/direction'] = 'ArrowLeft';
+            newStage['stage/' + character.key + '/position'] = 0;
+          } else {
+            newStage['stage/' + character.key + '/direction'] = 'ArrowRight';
+            newStage['stage/' + character.key + '/position'] = 7;
+          }
+        }
+      }
+    });
+    return this.dr.update(newStage);
   }
 
 }

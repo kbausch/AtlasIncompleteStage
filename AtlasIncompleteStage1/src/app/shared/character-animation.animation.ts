@@ -33,6 +33,16 @@ export const position =
             transform: 'translateX(100vw)'
         })),
         transition('0 <=> 7', []),
+        transition('1 => 7', animate('1500ms ease-in')),
+        transition('2 => 7', animate('1250ms ease-in')),
+        transition('3 => 7', animate('1s ease-in')),
+        transition('4 => 7', animate('750ms ease-in')),
+        transition('5 => 7', animate('625ms ease-in')),
+        transition('6 => 0', animate('1500ms ease-in')),
+        transition('5 => 0', animate('1250ms ease-in')),
+        transition('4 => 0', animate('1s ease-in')),
+        transition('3 => 0', animate('750ms ease-in')),
+        transition('2 => 0', animate('625ms ease-in')),
         transition(':increment', animate('500ms ease')),
         transition(':decrement', animate('500ms ease'))
     ]);

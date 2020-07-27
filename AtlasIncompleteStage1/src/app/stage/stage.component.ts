@@ -34,7 +34,9 @@ export class StageComponent implements OnChanges {
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (this.activeChar) {
-      this.getInput(event.key);
+      if (this.stage.find(character => character.key === this.activeChar) !== undefined) {
+        this.getInput(event.key);
+      }
     }
   }
   @HostListener('document:keydown', ['$event'])

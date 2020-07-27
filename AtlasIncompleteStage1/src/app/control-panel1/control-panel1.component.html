@@ -9,8 +9,8 @@
     <div class="list-group col-6 col-sm-2">
         Select Character on Stage
         <div *ngFor="let character of stageList">
-            <button type="button" class="list-group-item list-group-item-action" *ngIf="character.key !== 'img' && character.key !== 'animation'"
-                (click)="selectChar(character.key);">
+            <button type="button" class="list-group-item list-group-item-action"
+                *ngIf="character.key !== 'img' && character.key !== 'animation'" (click)="selectChar(character.key);">
                 <h5>{{character.key}}</h5>
                 Position: {{character.content.position}}<br>
                 Visible: {{character.content.visible}}<br>
@@ -27,37 +27,53 @@
             <div class="card-body form-group p-0 mt-3 mb-1">
                 <h5 class="card-title">{{emote.key}}</h5>
                 <div class="input-group mb-2">
-                    <input type="text" class="form-control text-center" id="text" [(ngModel)]="emoteBinds[emote.key]"
-                        name="text" maxlength="1" />
+                    <input type="text" class="form-control text-center" [(ngModel)]="emoteBinds[emote.key]" name="text"
+                        maxlength="1" />
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-outline-primary" [disabled]="!emoteBinds[emote.key]">Bind Key</button>
+                        <button type="submit" class="btn btn-outline-primary" [disabled]="!emoteBinds[emote.key]">Bind
+                            Key</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-    <form class="col-12 justify-content-around mt-5" (ngSubmit)="addImg(insertIMG)" #imgForm="ngForm">
-        <div class="card row p-3 form-group">
-            <input type="text" class="form-control" id="text" placeholder="Insert your background image URL here..."
-                [(ngModel)]="insertIMG" name="text" maxlength="800" />
-            <div class="col-12 p-0">
-                <button type="submit" class="border col-12 col-sm-6 btn btn-success"
-                    [disabled]="!insertIMG">Submit</button>
-                <button type="submit" class="border col-12 col-sm-6 btn btn-secondary"
-                    (click)="insertIMG ='https://cdn.discordapp.com/attachments/467185767593148418/726984522897424464/Deciduous_Forest_Background_-_Road_No_Clearing.png'">Reset</button>
-            </div>
+    <div class="col-12 mt-5 p-1 btn-group btn-group-toggle bg-info rounded-top">
+        <label class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" [(ngModel)]="masterToggle" ngbButton> Toggle DM Tools
+        </label>
+    </div>
+    <div class="col-12 bg-info rounded-bottom" *ngIf="masterToggle">
+        <div class="btn-group mt-2">
+            <button type="button" class="btn btn-secondary" (click)="clearStage(true, 'ArrowLeft',0)">Exit All Stage
+                Right</button>
+            <button type="button" class="btn btn-secondary" (click)="clearStage(true, 'ArrowRight',7)">Exit All Stage
+                Left</button>
+            <button type="button" class="btn btn-secondary" (click)="clearStage(true)">Exit Smart</button>
+            <button type="button" class="btn btn-danger" (click)="clearStage(false)">Hard Clear</button>
         </div>
-    </form>
-    <form class="col-12 justify-content-around" (ngSubmit)="addAnimation(insertAnim)" #animForm="ngForm">
-        <div class="card row p-3 form-group">
-            <input type="text" class="form-control" id="text" placeholder="Insert your animation URL to play here..."
-                [(ngModel)]="insertAnim" name="text" maxlength="800" />
-            <div class="col-12 p-0">
-                <button type="submit" class="border col-12 col-sm-6 btn btn-success"
-                    [disabled]="!insertAnim">Submit</button>
-                <button type="submit" class="border col-12 col-sm-6 btn btn-secondary"
-                    (click)="insertAnim = null">Reset</button>
+        <form class="col-12 justify-content-around mt-3" (ngSubmit)="addImg(insertIMG)" #imgForm="ngForm">
+            <div class="card row p-2 form-group">
+                <input type="text" class="form-control" placeholder="Insert your background image URL here..."
+                    [(ngModel)]="insertIMG" name="text" maxlength="800" />
+                <div class="col-12 p-0">
+                    <button type="submit" class="border col-12 col-sm-6 btn btn-success"
+                        [disabled]="!insertIMG">Submit</button>
+                    <button type="submit" class="border col-12 col-sm-6 btn btn-secondary"
+                        (click)="insertIMG ='https://cdn.discordapp.com/attachments/467185767593148418/726984522897424464/Deciduous_Forest_Background_-_Road_No_Clearing.png'">Reset</button>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+        <form class="col-12 justify-content-around" (ngSubmit)="addAnimation(insertAnim)" #animForm="ngForm">
+            <div class="card row p-2 form-group">
+                <input type="text" class="form-control" placeholder="Insert your animation URL to play here..."
+                    [(ngModel)]="insertAnim" name="text" maxlength="800" />
+                <div class="col-12 p-0">
+                    <button type="submit" class="border col-12 col-sm-6 btn btn-success"
+                        [disabled]="!insertAnim">Submit</button>
+                    <button type="submit" class="border col-12 col-sm-6 btn btn-secondary"
+                        (click)="insertAnim = null">Reset</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
