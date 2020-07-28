@@ -101,7 +101,7 @@ export class SpeechService {
         const onThisNewMeasure = ({ volume, time }) => {
           const vol = floor(volume * 100);
           if (this.activeCharacter && vol !== this.lastHeight) {
-            console.log(vol, time);
+            //console.log(vol, time);
             const updates = {};
             updates['stage/' + this.activeCharacter + '/height'] = vol;
             this.lastHeight = vol;

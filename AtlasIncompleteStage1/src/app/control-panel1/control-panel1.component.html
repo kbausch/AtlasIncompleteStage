@@ -21,6 +21,23 @@
         </div>
     </div>
     <div class="row col-12 col-sm-8">
+        <div class="input-group mb-2" *ngIf="emotes">
+            <select class="custom-select" type="number" [(ngModel)]="dmgAmount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+            <div class="input-group-append d-block">
+                <button class="btn btn-outline-danger" type="button" (click)="doDMG()">Damage</button>
+            </div>
+        </div>
         <form class="card col-6 col-md-4 col-lg-3" *ngFor="let emote of emotes | keyvalue" style="width: 250px"
             (ngSubmit)="bindEmote()" #emoteForm="ngForm" autocomplete="off">
             <img [src]="emote.value" class="card-img-top" [alt]="emote.key">

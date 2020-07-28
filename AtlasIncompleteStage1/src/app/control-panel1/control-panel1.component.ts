@@ -35,6 +35,21 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
     'f': 'festive'
   };
 
+  dmgKey = [
+    'https://i.imgur.com/0RIJTU9.png',
+    'https://i.imgur.com/LiL94tY.png',
+    'https://i.imgur.com/znEr3zU.png',
+    'https://i.imgur.com/CPBppEp.png',
+    'https://i.imgur.com/0ZZITRQ.png',
+    'https://i.imgur.com/kSzM6uB.png',
+    'https://i.imgur.com/ZI54aj4.png',
+    'https://i.imgur.com/IG2VoO7.png',
+    'https://i.imgur.com/cxKtMVa.png',
+    'https://i.imgur.com/QeIzSzr.png'
+  ];
+  dmgAmount: number;
+  private date = new Date().getTime();
+
   private stageSub: Subscription;
   private charSub: Subscription;
 
@@ -130,6 +145,16 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
         }
       }
     });
+    return this.dr.update(newStage);
+  }
+
+  doDMG(): Promise<any> {
+    const newStage = {};
+    if (this.dmgKey[this.dmgAmount - 1]) {
+      newStage['stage/' + this.selectedChar + '/damageAnimation'] = this.dmgKey[this.dmgAmount - 1] + '#' + (new Date().getTime());
+    } else {
+      newStage['stage/' + this.selectedChar + '/damageAnimation'] = null;
+    }
     return this.dr.update(newStage);
   }
 

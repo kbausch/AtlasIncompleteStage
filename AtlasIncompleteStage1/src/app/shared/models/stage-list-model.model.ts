@@ -8,6 +8,7 @@ export class StageListModel {
         level?: number;
         zindex?: number;
         height?: number;
+        damageAnimation?: string;
     };
     index?: number;
 }
