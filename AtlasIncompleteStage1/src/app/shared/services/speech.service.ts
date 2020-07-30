@@ -36,17 +36,17 @@ export class SpeechService {
     return !!annyang;
   }
 
-  init() {
+  /*init() {
     // Log anything the user says and what speech recognition thinks it might be
     annyang.addCallback('result', (userSaid: string[]) => {
-      /*words(userSaid[0].substring(this.indexCount)).forEach(word => {
+      words(userSaid[0].substring(this.indexCount)).forEach(word => {
         split(cmu[word], ' ').forEach(sound => {
           if (key[sound]) {
             this.queue.push(key[sound]);
           }
         });
       });
-      this.indexCount = userSaid[0].length;*/
+      this.indexCount = userSaid[0].length;
     });
     annyang.addCallback('soundstart', () => {
       this.indexCount = 0;
@@ -60,7 +60,7 @@ export class SpeechService {
     annyang.addCallback('errorPermissionDenied', (err) => {
       this._handleError('denied', 'User denied microphone permissions.', err);
     });
-  }
+  }*/
 
   private _handleError(error, msg, errObj) {
     this.zone.run(() => {
@@ -99,7 +99,7 @@ export class SpeechService {
     volumeMeter.switchOn() // switches on the MicVolumeMeter
       .then(() => {
         const onThisNewMeasure = ({ volume, time }) => {
-          const vol = floor(volume * 100);
+          const vol = floor(Math.pow(volume * 100, .8));
           if (this.activeCharacter && vol !== this.lastHeight) {
             //console.log(vol, time);
             const updates = {};

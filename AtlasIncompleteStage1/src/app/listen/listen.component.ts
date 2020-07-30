@@ -15,7 +15,7 @@ export class ListenComponent implements OnInit, OnDestroy {
   constructor(public speech: SpeechService) { }
 
   ngOnInit() {
-    this.speech.init();
+    //this.speech.init();
     this._listenErrors();
   }
 

@@ -36,6 +36,7 @@
             </select>
             <div class="input-group-append d-block">
                 <button class="btn btn-outline-danger" type="button" (click)="doDMG()">Damage</button>
+                <button class="btn btn-outline-secondary" type="button" (click)="cleanDMGBuffer(false)">De-Buffer</button>
             </div>
         </div>
         <form class="card col-6 col-md-4 col-lg-3" *ngFor="let emote of emotes | keyvalue" style="width: 250px"
@@ -67,6 +68,24 @@
                 Left</button>
             <button type="button" class="btn btn-secondary" (click)="clearStage(true)">Exit Smart</button>
             <button type="button" class="btn btn-danger" (click)="clearStage(false)">Hard Clear</button>
+        </div>
+        <div class="input-group my-2">
+            <select class="custom-select" type="number" [(ngModel)]="dmgAmount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+            <div class="input-group-append d-block">
+                <button class="btn btn-danger" type="button" (click)="doDMG(true)">Damage Everyone</button>
+                <button class="btn btn-secondary" type="button" (click)="cleanDMGBuffer(true)">De-Buffer</button>
+            </div>
         </div>
         <form class="col-12 justify-content-around mt-3" (ngSubmit)="addImg(insertIMG)" #imgForm="ngForm">
             <div class="card row p-2 form-group">

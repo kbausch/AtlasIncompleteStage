@@ -3,7 +3,8 @@ import {
     state,
     style,
     animate,
-    transition
+    transition,
+    keyframes
 } from '@angular/animations';
 
 export const position =
@@ -66,4 +67,15 @@ export const level = trigger('level', [
     })),
     transition('1 => 0', animate('300ms ease-in')),
     transition('0 => 1', animate('300ms ease-out'))
+]);
+
+export const wiggle = trigger('wiggle', [
+    transition(':enter', []),
+    transition(':leave', []),
+    transition('* => *', animate('150ms ease', keyframes([
+        style({ transform: 'translateX(-4px)', offset: 0 }), // offset = 0
+        style({ transform: 'translateX(8px)', offset: 0.49 }), // offset = 0.33
+        style({ transform: 'translateX(-10px)', offset: 0.83 }), // offset = 0.66
+        style({ transform: 'translateX(2px)', offset: 1 }) // offset = 1
+    ])))
 ]);

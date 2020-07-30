@@ -148,14 +148,35 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
     return this.dr.update(newStage);
   }
 
-  doDMG(): Promise<any> {
+  doDMG(all?: boolean): Promise<any> {
     const newStage = {};
+    if (all) {
+      this.stageList.forEach(char => {
+        if (char.key !== 'img' && char.key !== 'animation') {
+          newStage['stage/' + char.key + '/damageAnimation'] = this.dmgKey[this.dmgAmount - 1] + '#' + (new Date().getTime());
+        }
+      });
+      return this.dr.update(newStage);
+    }
     if (this.dmgKey[this.dmgAmount - 1]) {
       newStage['stage/' + this.selectedChar + '/damageAnimation'] = this.dmgKey[this.dmgAmount - 1] + '#' + (new Date().getTime());
     } else {
-      newStage['stage/' + this.selectedChar + '/damageAnimation'] = null;
+      this.dr.remove('stage/' + this.selectedChar + '/damageAnimation');
     }
     return this.dr.update(newStage);
+  }
+
+  cleanDMGBuffer(all: boolean) {
+    if (all) {
+      this.stageList.forEach(char => {
+        if (char.key !== 'img' && char.key !== 'animation') {
+          this.dr.remove('stage/' + char.key + '/damageAnimation');
+        }
+      });
+      return;
+    } else {
+      return this.dr.remove('stage/' + this.selectedChar + '/damageAnimation');
+    }
   }
 
 }

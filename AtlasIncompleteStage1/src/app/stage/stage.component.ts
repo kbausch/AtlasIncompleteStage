@@ -1,7 +1,7 @@
 import { Component, OnChanges, Input } from '@angular/core';
 import { HostListener } from '@angular/core';
 import { ResizeEvent } from 'angular-resizable-element';
-import { position, level, direction } from '../shared/character-animation.animation';
+import { position, level, direction, wiggle } from '../shared/character-animation.animation';
 
 import { StageListModel } from '../shared/models/stage-list-model.model';
 import { CharacterListModel } from '../shared/models/character-list-model.model';
@@ -14,7 +14,7 @@ import { find } from "lodash";
   selector: 'app-stage',
   templateUrl: './stage.component.html',
   styleUrls: ['./stage.component.scss'],
-  animations: [position, direction, level]
+  animations: [position, direction, level, wiggle]
 })
 export class StageComponent implements OnChanges {
 

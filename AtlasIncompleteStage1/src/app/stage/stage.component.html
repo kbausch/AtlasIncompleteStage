@@ -6,10 +6,11 @@
         <div [@position]="character.content.position" *ngIf="character.key !== 'img' && character.key !== 'animation'">
             <div [@level]="character.content.level">
                 <img style="width: 17vw; position: absolute;" *ngIf="character.content.damageAnimation"
-                    [src]="character.content.damageAnimation" [style.zIndex]="character.content.zindex+1"/>
-                <img style="width: 17vw;" [@direction]="character.content.direction"
-                    [hidden]="!character.content.visible"
-                    [src]="characterList[character.index].content[character.content.expression]">
+                    [src]="character.content.damageAnimation" [style.zIndex]="character.content.zindex+1" />
+                <div [@direction]="character.content.direction" [hidden]="!character.content.visible">
+                    <img style="width: 17vw;" [@wiggle]="character.content.damageAnimation"
+                        [src]="characterList[character.index].content[character.content.expression]">
+                </div>
             </div>
         </div>
     </div>
