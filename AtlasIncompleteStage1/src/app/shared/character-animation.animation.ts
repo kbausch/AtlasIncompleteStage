@@ -9,41 +9,57 @@ import {
 
 export const position =
     trigger('position', [
-        state('0', style({
-            transform: 'translateX(-25vw)'
+        state('0, -1', style({
+            transform: 'translateX(-20vw)'
         })),
         state('1', style({
-            transform: 'translateX(0vw)'
+            transform: 'translateX(-6vw)'
         })),
         state('2', style({
-            transform: 'translateX(16vw)'
+            transform: 'translateX(0vw)'
         })),
         state('3', style({
-            transform: 'translateX(32vw)'
+            transform: 'translateX(8vw)'
         })),
         state('4', style({
-            transform: 'translateX(48vw)'
+            transform: 'translateX(16vw)'
         })),
         state('5', style({
-            transform: 'translateX(64vw)'
+            transform: 'translateX(24vw)'
         })),
         state('6', style({
-            transform: 'translateX(80vw)'
+            transform: 'translateX(32vw)'
         })),
         state('7', style({
+            transform: 'translateX(40vw)'
+        })),
+        state('8', style({
+            transform: 'translateX(48vw)'
+        })),
+        state('9', style({
+            transform: 'translateX(56vw)'
+        })),
+        state('10', style({
+            transform: 'translateX(64vw)'
+        })),
+        state('11', style({
+            transform: 'translateX(72vw)'
+        })),
+        state('12', style({
+            transform: 'translateX(80vw)'
+        })),
+        state('13', style({
+            transform: 'translateX(88vw)'
+        })),
+        state('14, 15', style({
             transform: 'translateX(100vw)'
         })),
-        transition('0 <=> 7', []),
-        transition('1 => 7', animate('1500ms ease-in')),
-        transition('2 => 7', animate('1250ms ease-in')),
-        transition('3 => 7', animate('1s ease-in')),
-        transition('4 => 7', animate('750ms ease-in')),
-        transition('5 => 7', animate('625ms ease-in')),
-        transition('6 => 0', animate('1500ms ease-in')),
-        transition('5 => 0', animate('1250ms ease-in')),
-        transition('4 => 0', animate('1s ease-in')),
-        transition('3 => 0', animate('750ms ease-in')),
-        transition('2 => 0', animate('625ms ease-in')),
+        transition('-1 => 14, 15 => 0, 0 <=> 14', []),
+        transition('1 => 14, 2 => 14, 13 => 0, 12 => 0', animate('1500ms ease-in')),
+        transition('3 => 14, 4 => 14, 11 => 0, 10 => 0', animate('1250ms ease-in')),
+        transition('5 => 14, 6 => 14, 9 => 0, 8 => 0', animate('1s ease-in')),
+        transition('7 => 14, 8 => 14, 7 => 0, 6 => 0', animate('750ms ease-in')),
+        transition('9 => 14, 10 => 14, 5 => 0, 4 => 0', animate('625ms ease-in')),
         transition(':increment', animate('500ms ease')),
         transition(':decrement', animate('500ms ease'))
     ]);

@@ -135,12 +135,12 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
           newStage['stage/' + character.key + '/direction'] = direction;
           newStage['stage/' + character.key + '/position'] = position;
         } else {
-          if (character.content.position < 4) {
+          if (character.content.position < 7) {
             newStage['stage/' + character.key + '/direction'] = 'ArrowLeft';
             newStage['stage/' + character.key + '/position'] = 0;
           } else {
             newStage['stage/' + character.key + '/direction'] = 'ArrowRight';
-            newStage['stage/' + character.key + '/position'] = 7;
+            newStage['stage/' + character.key + '/position'] = 14;
           }
         }
       }

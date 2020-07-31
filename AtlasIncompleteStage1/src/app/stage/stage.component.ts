@@ -27,12 +27,16 @@ export class StageComponent implements OnChanges {
 
   img: string;
   animation: string;
+  ctrl = false;
 
   characterList: CharacterListModel[];
   stage: StageListModel[];
 
   @HostListener('document:keyup', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.keyCode == 17) {
+      this.ctrl = false;
+    }
     if (this.activeChar) {
       if (this.stage.find(character => character.key === this.activeChar) !== undefined) {
         this.getInput(event.key);
@@ -41,8 +45,10 @@ export class StageComponent implements OnChanges {
   }
   @HostListener('document:keydown', ['$event'])
   stopUpDown(event: KeyboardEvent) {
-    if (event.keyCode === 40) {
+    if (event.keyCode === 40 || event.keyCode === 38 || event.keyCode === 32) {
       event.preventDefault();
+    } else if (event.keyCode == 17) {
+      this.ctrl = true;
     }
   }
 
@@ -97,20 +103,24 @@ export class StageComponent implements OnChanges {
 
     if (key === 'ArrowRight') {
       if (this.stage[this.activeCharIndex].content.direction === 'ArrowRight') {
-        if (this.stage[this.activeCharIndex].content.position === 7) {
+        if (this.stage[this.activeCharIndex].content.position >= 14) {
           updates['stage/' + this.activeChar].position = 0;
-        } else {
+        } else if (this.ctrl) {
           updates['stage/' + this.activeChar].position++;
+        } else {
+          updates['stage/' + this.activeChar].position = updates['stage/' + this.activeChar].position + 2;
         }
       } else {
         updates['stage/' + this.activeChar].direction = 'ArrowRight';
       }
     } else if (key === 'ArrowLeft') {
       if (this.stage[this.activeCharIndex].content.direction === 'ArrowLeft') {
-        if (this.stage[this.activeCharIndex].content.position === 0) {
-          updates['stage/' + this.activeChar].position = 7;
-        } else {
+        if (this.stage[this.activeCharIndex].content.position <= 0) {
+          updates['stage/' + this.activeChar].position = 14;
+        } else if (this.ctrl) {
           updates['stage/' + this.activeChar].position--;
+        } else {
+          updates['stage/' + this.activeChar].position = updates['stage/' + this.activeChar].position - 2;
         }
       } else {
         updates['stage/' + this.activeChar].direction = 'ArrowLeft';
