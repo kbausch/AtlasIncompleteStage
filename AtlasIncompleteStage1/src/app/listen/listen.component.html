@@ -1,8 +1,18 @@
 <div class="alert alert-info mt-3">
-    <h2 class="text-center">Speak to Play</h2>
-    <p>Your browser <a class="alert-link"
+    <h2 class="text-center">Voice Software</h2>
+    <p class="mb-2">Your browser <a class="alert-link"
             href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition#Browser_compatibility">supports
-            speech recognition</a>! Toggle twice to get it to work closer to real time.</p>
+            speech recognition</a>!</p>
+    <div class="d-flex">
+        <p class="mr-auto">Current intensity level: {{speech.level - 30}}</p>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="safteyCheck" checked #ceiling
+                (input)="toggleCeiling(ceiling.checked)">
+            <label class="custom-control-label" for="safteyCheck">Sound Ceiling</label>
+        </div>
+    </div>
+    <input type="range" class="w-100 mb-3" min="32" max="110" value="80" step="2" #rangeNum
+        (input)="changeIntensity(rangeNum.value)">
     <div class="row mb-3">
         <div class="col btn-group">
             <button class="btn btn-primary col-6" (click)="speech.startListening()" [disabled]="speech.listening">

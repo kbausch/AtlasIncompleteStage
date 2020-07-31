@@ -1,11 +1,10 @@
 <app-stage [activeChar]="controller"></app-stage>
 <div class="row m-1" *ngIf="controller">
-  <ngb-alert [dismissible]="false" class="w-100 text-center">
+  <ngb-alert [dismissible]="false" class="w-100 text-center mb-0">
     Your current active character is: <strong>{{controller}}</strong>
   </ngb-alert>
 </div>
-<app-control-panel1 (activeChar)="controller = $event"></app-control-panel1>
 <div class="container">
-  <h1 class="text-center">Voice Software!</h1>
   <app-listen *ngIf="speech.speechSupported"></app-listen>
 </div>
+<app-control-panel1 (activeChar)="controller = $event"></app-control-panel1>

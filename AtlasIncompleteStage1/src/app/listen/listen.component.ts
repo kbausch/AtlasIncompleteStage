@@ -37,6 +37,14 @@ export class ListenComponent implements OnInit, OnDestroy {
     }
   }
 
+  changeIntensity(range: number) {
+    this.speech.level = range;
+  }
+
+  toggleCeiling(ceiling: boolean) {
+    this.speech.ceiling = ceiling;
+  }
+
   ngOnDestroy() {
     this.errorsSub.unsubscribe();
   }

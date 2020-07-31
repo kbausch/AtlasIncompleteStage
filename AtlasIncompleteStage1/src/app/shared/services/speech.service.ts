@@ -23,12 +23,15 @@ export class SpeechService {
 
   //queue: number[] = [];
 
-  activeCharacter: string;
-  lastHeight: number;
+  private activeCharacter: string;
+  private lastHeight: number;
 
   errors$ = new Subject<{ [key: string]: any }>();
   listening = false;
-  indexCount = 0;
+  //private indexCount = 0;
+
+  level = 80;
+  ceiling = true;
 
   constructor(private zone: NgZone, private db: AngularFireDatabase) { }
 
@@ -99,7 +102,10 @@ export class SpeechService {
     volumeMeter.switchOn() // switches on the MicVolumeMeter
       .then(() => {
         const onThisNewMeasure = ({ volume, time }) => {
-          const vol = floor(Math.pow(volume * 100, .8));
+          let vol = floor(Math.pow(volume * 100, this.level / 100));
+          if (vol > 24 && this.ceiling) {
+            vol = 24;
+          }
           if (this.activeCharacter && vol !== this.lastHeight) {
             //console.log(vol, time);
             const updates = {};
@@ -118,7 +124,7 @@ export class SpeechService {
   abort() {
     //annyang.abort();
     volumeMeter.switchOff();
-    this.indexCount = 0;
+    //this.indexCount = 0;
     this.listening = false;
   }
 
