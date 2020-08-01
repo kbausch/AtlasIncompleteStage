@@ -3,6 +3,7 @@ import { CharacterListModel } from '../shared/models/character-list-model.model'
 import { StageListModel } from '../shared/models/stage-list-model.model';
 import { Subscription } from 'rxjs';
 import { DataretrieverService } from '../shared/services/dataretriever.service';
+import { SpeechService } from '../shared/services/speech.service';
 import { invert, find, pickBy, has, assign } from 'lodash';
 
 @Component({
@@ -15,12 +16,12 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   stageList: StageListModel[];
   characterList: CharacterListModel[];
 
-  selectedChar: string;
+  private selectedChar: string;
   @Output('activeChar') activeChar = new EventEmitter<string>();
 
   emotes: { [key: string]: string };
   emoteBinds: object;
-  bindPreferences: object = {
+  private bindPreferences: object = {
     'q': 'angry',
     'w': 'concern',
     'e': 'confused',
@@ -35,7 +36,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
     'f': 'festive'
   };
 
-  dmgKey = [
+  private dmgKey = [
     'https://i.imgur.com/0RIJTU9.png',
     'https://i.imgur.com/LiL94tY.png',
     'https://i.imgur.com/znEr3zU.png',
@@ -48,7 +49,6 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
     'https://i.imgur.com/QeIzSzr.png'
   ];
   dmgAmount: number;
-  private date = new Date().getTime();
 
   private stageSub: Subscription;
   private charSub: Subscription;
@@ -57,9 +57,17 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
   insertIMG: string;
   insertAnim: string;
 
-  constructor(private dr: DataretrieverService) {
+  constructor(private dr: DataretrieverService, private sp: SpeechService) {
     // .query.once('value').then(result => this.stageList = result.toJSON())
-    this.stageSub = dr.getStage().subscribe(result => this.stageList = result);
+    this.stageSub = dr.getStage().subscribe(result => {
+      this.stageList = result;
+      if (this.selectedChar && !(this.stageList.find(character => character.key === this.selectedChar))) {
+        this.selectedChar = null;
+        this.activeChar.emit(null);
+        sp.addActiveChar(null);
+        this.emotes = null;
+      }
+    });
     this.charSub = dr.getCharacters().subscribe(result => this.characterList = result);
     dr.addBinds(this.bindPreferences);
   }
@@ -77,6 +85,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
       if (this.selectedChar === key) {
         this.selectedChar = null;
         this.activeChar.emit(null);
+        this.sp.addActiveChar(null);
         this.emotes = null;
       }
       return this.dr.remove('stage/' + key);
@@ -100,6 +109,7 @@ export class ControlPanel1Component implements OnInit, OnDestroy {
     this.emotes = find(this.characterList, (o: CharacterListModel) => o.key === key).content;
     this.dr.addBinds(pickBy(this.bindPreferences, (value) => has(this.emotes, value)));
     this.emoteBinds = invert(this.dr.emoteBinds);
+    this.sp.addActiveChar(key);
     return this.activeChar.emit(key);
   }
 

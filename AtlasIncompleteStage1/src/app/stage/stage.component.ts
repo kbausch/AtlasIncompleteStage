@@ -7,7 +7,6 @@ import { StageListModel } from '../shared/models/stage-list-model.model';
 import { CharacterListModel } from '../shared/models/character-list-model.model';
 
 import { DataretrieverService } from '../shared/services/dataretriever.service';
-import { SpeechService } from '../shared/services/speech.service';
 import { find } from "lodash";
 
 @Component({
@@ -27,7 +26,7 @@ export class StageComponent implements OnChanges {
 
   img: string;
   animation: string;
-  ctrl = false;
+  private ctrl = false;
 
   characterList: CharacterListModel[];
   stage: StageListModel[];
@@ -38,9 +37,7 @@ export class StageComponent implements OnChanges {
       this.ctrl = false;
     }
     if (this.activeChar) {
-      if (this.stage.find(character => character.key === this.activeChar) !== undefined) {
-        this.getInput(event.key);
-      }
+      this.getInput(event.key);
     }
   }
   @HostListener('document:keydown', ['$event'])
@@ -52,7 +49,7 @@ export class StageComponent implements OnChanges {
     }
   }
 
-  constructor(private dr: DataretrieverService, private sp: SpeechService) {
+  constructor(private dr: DataretrieverService) {
     this.dr.getCharacters().subscribe(result => this.subStage(result));
   }
 
@@ -60,7 +57,6 @@ export class StageComponent implements OnChanges {
     if (this.activeChar) {
       this.activeCharIndex = this.stage.indexOf(this.stage.find(x => x.key === this.activeChar));
     }
-    this.sp.addActiveChar(this.activeChar);
   }
 
   private subStage(result: CharacterListModel[]) {
